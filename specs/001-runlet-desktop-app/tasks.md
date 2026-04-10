@@ -19,12 +19,12 @@
 
 **Purpose**: Electron project initialization with electron-vite, React, and core dependencies
 
-- [ ] T001 Initialize electron-vite project with React + TypeScript template in package.json, tsconfig.json, vite.config.ts
-- [ ] T002 Install core dependencies: electron, react, react-dom, zustand, monaco-editor, @babel/parser, @babel/traverse, @babel/generator, esbuild, prettier in package.json
-- [ ] T003 [P] Configure ESLint and Prettier for the codebase in .eslintrc.cjs, .prettierrc
-- [ ] T004 [P] Configure electron-builder packaging for macOS, Windows, Linux in electron-builder.yml
-- [ ] T005 [P] Define shared TypeScript types for Tab, OutputResult, Snippet, InstalledPackage, EnvironmentVariable, Settings, Theme in src/shared/types.ts
-- [ ] T006 [P] Define shared IPC channel constants and default settings values in src/shared/constants.ts
+- [x] T001 Initialize electron-vite project with React + TypeScript template in package.json, tsconfig.json, vite.config.ts
+- [x] T002 Install core dependencies: electron, react, react-dom, zustand, monaco-editor, @babel/parser, @babel/traverse, @babel/generator, esbuild, prettier in package.json
+- [x] T003 [P] Configure ESLint and Prettier for the codebase in .eslintrc.cjs, .prettierrc
+- [x] T004 [P] Configure electron-builder packaging for macOS, Windows, Linux in electron-builder.yml
+- [x] T005 [P] Define shared TypeScript types for Tab, OutputResult, Snippet, InstalledPackage, EnvironmentVariable, Settings, Theme in src/shared/types.ts
+- [x] T006 [P] Define shared IPC channel constants and default settings values in src/shared/constants.ts
 
 ---
 
