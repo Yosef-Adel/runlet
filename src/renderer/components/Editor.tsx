@@ -39,6 +39,40 @@ self.MonacoEnvironment = {
   },
 };
 
+// Configure TypeScript/JavaScript language defaults
+const tsCompilerOptions: monaco.languages.typescript.CompilerOptions = {
+  target: monaco.languages.typescript.ScriptTarget.ES2022,
+  module: monaco.languages.typescript.ModuleKind.ESNext,
+  moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+  allowNonTsExtensions: true,
+  allowJs: true,
+  checkJs: false,
+  strict: false,
+  noEmit: true,
+  jsx: monaco.languages.typescript.JsxEmit.React,
+  esModuleInterop: true,
+  lib: ['es2022', 'dom', 'dom.iterable'],
+};
+
+monaco.languages.typescript.typescriptDefaults.setCompilerOptions(tsCompilerOptions);
+monaco.languages.typescript.javascriptDefaults.setCompilerOptions(tsCompilerOptions);
+
+// Enable diagnostics
+monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: false,
+});
+monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: false,
+});
+
+// Enable type acquisition for better IntelliSense
+monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
+monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+
 export interface EditorProps {
   value: string;
   language: 'javascript' | 'typescript';

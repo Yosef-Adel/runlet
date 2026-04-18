@@ -96,10 +96,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T030 [US3] Add esbuild TypeScript-to-JavaScript transpilation step in the execution pipeline (before Babel transformation) in src/main/executor/runner.ts
-- [ ] T031 [US3] Configure Monaco editor TypeScript language service with compiler options, type acquisition, and diagnostics in src/renderer/components/Editor.tsx
-- [ ] T032 [US3] Enable Monaco autocomplete, hover info tooltips, inline diagnostics (errors/warnings), and function signature help in src/renderer/components/Editor.tsx
-- [ ] T033 [US3] Add language toggle per tab (JavaScript/TypeScript) stored in tab state, reflected in Monaco editor mode in src/renderer/hooks/useTabs.ts
+- [x] T030 [US3] Add esbuild TypeScript-to-JavaScript transpilation step in the execution pipeline (before Babel transformation) in src/main/executor/runner.ts
+- [x] T031 [US3] Configure Monaco editor TypeScript language service with compiler options, type acquisition, and diagnostics in src/renderer/components/Editor.tsx
+- [x] T032 [US3] Enable Monaco autocomplete, hover info tooltips, inline diagnostics (errors/warnings), and function signature help in src/renderer/components/Editor.tsx
+- [x] T033 [US3] Add language toggle per tab (JavaScript/TypeScript) stored in tab state, reflected in Monaco editor mode in src/renderer/hooks/useTabs.ts
 
 **Checkpoint**: TypeScript code compiles and executes. Monaco provides autocomplete, hover, linting, and signatures.
 
@@ -113,10 +113,10 @@
 
 ### Implementation for User Story 4
 
-- [ ] T034 [US4] Expose Node.js built-in modules (fs, path, os, crypto, http, etc.) in execution sandbox globals in src/main/executor/sandbox.ts
-- [ ] T035 [US4] Expose browser/web APIs (fetch, URL, TextEncoder/TextDecoder, AbortController, etc.) in execution sandbox globals in src/main/executor/sandbox.ts
-- [ ] T036 [US4] Implement console capture (console.log, console.error, console.warn) in sandbox, forwarding output with line numbers to results in src/main/executor/sandbox.ts
-- [ ] T037 [US4] Handle async/await execution — detect async code and await top-level promises before returning results in src/main/executor/runner.ts
+- [x] T034 [US4] Expose Node.js built-in modules (fs, path, os, crypto, http, etc.) in execution sandbox globals in src/main/executor/sandbox.ts
+- [x] T035 [US4] Expose browser/web APIs (fetch, URL, TextEncoder/TextDecoder, AbortController, etc.) in execution sandbox globals in src/main/executor/sandbox.ts
+- [x] T036 [US4] Implement console capture (console.log, console.error, console.warn) in sandbox, forwarding output with line numbers to results in src/main/executor/sandbox.ts
+- [x] T037 [US4] Handle async/await execution — detect async code and await top-level promises before returning results in src/main/executor/runner.ts
 
 **Checkpoint**: Both Node.js require() and browser fetch/DOM APIs work in user code. Console output captured.
 
