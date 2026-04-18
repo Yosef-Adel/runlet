@@ -131,7 +131,8 @@ export default function TabBar({
           display: 'flex',
           alignItems: 'stretch',
           overflowX: 'auto',
-          flex: 1,
+          flexShrink: 1,
+          minWidth: 0,
           WebkitAppRegion: 'no-drag' as unknown as string,
         }}
       >
@@ -235,6 +236,9 @@ export default function TabBar({
           );
         })}
       </div>
+
+      {/* Draggable spacer — fills empty space between tabs and + button */}
+      <div style={{ flex: 1, WebkitAppRegion: 'drag' as unknown as string }} />
 
       {/* Add Tab Button */}
       <button
