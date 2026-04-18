@@ -35,7 +35,7 @@ export function transformCode(code: string, options: TransformOptions): string {
           t.arrayExpression([])
         ),
       ]);
-      path.unshiftContainer('body', resultsDecl);
+      path.unshiftContainer('body', [resultsDecl]);
     },
 
     // Wrap top-level expression statements to capture results
@@ -52,7 +52,7 @@ export function transformCode(code: string, options: TransformOptions): string {
         return;
       }
 
-      // Skip console.* calls — they are captured by the sandbox's console proxy
+      // For console.* calls, inject line number via __CONSOLE_LINE__ instead of wrapping
       const expr = path.node.expression;
       if (
         t.isCallExpression(expr) &&
@@ -60,6 +60,21 @@ export function transformCode(code: string, options: TransformOptions): string {
         t.isIdentifier(expr.callee.object) &&
         expr.callee.object.name === 'console'
       ) {
+        const line = path.node.loc?.start.line ?? 0;
+        // Transform: console.log("x") → (__CONSOLE_LINE__ = 1, console.log("x"))
+        path.replaceWith(
+          t.expressionStatement(
+            t.sequenceExpression([
+              t.assignmentExpression(
+                '=',
+                t.identifier('__CONSOLE_LINE__'),
+                t.numericLiteral(line)
+              ),
+              expr,
+            ])
+          )
+        );
+        path.skip();
         return;
       }
 

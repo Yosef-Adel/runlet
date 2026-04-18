@@ -8,9 +8,13 @@ export interface SandboxOptions {
 export function createSandbox(options: SandboxOptions = {}): Context {
   const consoleOutput: { method: string; args: unknown[]; line: number | null }[] = [];
 
+  // Will be set by transformed code before each console call
+  const lineTracker = { current: null as number | null };
+
   const makeConsoleMethod = (method: string) => {
     return (...args: unknown[]) => {
-      consoleOutput.push({ method, args, line: null });
+      consoleOutput.push({ method, args, line: lineTracker.current });
+      lineTracker.current = null;
     };
   };
 
@@ -153,5 +157,16 @@ export function createSandbox(options: SandboxOptions = {}): Context {
     return _require(id);
   };
 
-  return createContext(sandboxGlobals);
+  const context = createContext(sandboxGlobals);
+
+  // Define __CONSOLE_LINE__ on the context with getter/setter
+  // (must be done after createContext to preserve the descriptor)
+  Object.defineProperty(context, '__CONSOLE_LINE__', {
+    get: () => lineTracker.current,
+    set: (v: number | null) => { lineTracker.current = v; },
+    enumerable: true,
+    configurable: true,
+  });
+
+  return context;
 }
