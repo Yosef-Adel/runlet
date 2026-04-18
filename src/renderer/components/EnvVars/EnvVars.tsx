@@ -59,20 +59,22 @@ export default function EnvVars(): React.ReactElement {
         }}>
           Environment Variables
         </div>
-        <div style={{ display: 'flex', gap: 'var(--space-xs)', marginBottom: 'var(--space-xs)' }}>
-          <input
-            value={newKey}
-            onChange={(e) => setNewKey(e.target.value)}
-            placeholder="KEY"
-            style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 'var(--text-sm)', textTransform: 'uppercase' }}
-          />
-          <input
-            value={newValue}
-            onChange={(e) => setNewValue(e.target.value)}
-            placeholder="Value"
-            onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-            style={{ flex: 1 }}
-          />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xs)' }}>
+          <div style={{ display: 'flex', gap: 'var(--space-xs)' }}>
+            <input
+              value={newKey}
+              onChange={(e) => setNewKey(e.target.value)}
+              placeholder="KEY"
+              style={{ flex: 1, minWidth: 0, fontFamily: 'var(--font-mono)', fontSize: 'var(--text-sm)', textTransform: 'uppercase' }}
+            />
+            <input
+              value={newValue}
+              onChange={(e) => setNewValue(e.target.value)}
+              placeholder="Value"
+              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+              style={{ flex: 1, minWidth: 0 }}
+            />
+          </div>
           <button
             onClick={handleAdd}
             disabled={!newKey.trim()}
@@ -83,12 +85,13 @@ export default function EnvVars(): React.ReactElement {
               borderRadius: 'var(--radius-md)',
               fontSize: 'var(--text-sm)',
               fontWeight: 500,
+              width: '100%',
               transition: 'background var(--transition-fast)',
             }}
             onMouseEnter={(e) => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'var(--accent-hover)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent)'; }}
           >
-            Add
+            Add Variable
           </button>
         </div>
       </div>
@@ -113,44 +116,48 @@ export default function EnvVars(): React.ReactElement {
                 padding: 'var(--space-sm) var(--space-lg)',
                 borderBottom: '1px solid var(--border-subtle)',
                 display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--space-sm)',
+                flexDirection: 'column',
+                gap: 'var(--space-xs)',
                 transition: 'background var(--transition-fast)',
               }}
               onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--border-subtle)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
             >
-              <span style={{
-                color: 'var(--syntax-type)',
-                minWidth: 80,
-                flexShrink: 0,
-                fontFamily: 'var(--font-mono)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: 500,
-              }}>
-                {v.key}
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{
+                  color: 'var(--syntax-type)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}>
+                  {v.key}
+                </span>
+                <button
+                  onClick={() => handleDelete(v.key)}
+                  style={{
+                    color: 'var(--text-muted)',
+                    padding: '2px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexShrink: 0,
+                    transition: 'color var(--transition-fast)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--error)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
               <input
                 value={v.value}
                 onChange={(e) => handleUpdate(v.key, e.target.value)}
-                style={{ flex: 1, fontSize: 'var(--text-sm)' }}
+                style={{ width: '100%', fontSize: 'var(--text-sm)', minWidth: 0 }}
               />
-              <button
-                onClick={() => handleDelete(v.key)}
-                style={{
-                  color: 'var(--text-muted)',
-                  padding: '2px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  transition: 'color var(--transition-fast)',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--error)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
             </div>
           ))
         )}

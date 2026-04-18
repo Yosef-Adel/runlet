@@ -5,7 +5,9 @@ node_modules/
 # Build outputs
 out/
 dist/
-build/
+
+# Keep build resources for electron-builder icons
+!build/
 
 # Environment
 .env*

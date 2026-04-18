@@ -63,9 +63,13 @@ function createApplicationMenu(): void {
     {
       label: 'View',
       submenu: [
-        { role: 'reload' },
-        { role: 'toggleDevTools' },
-        { type: 'separator' },
+        ...(app.isPackaged
+          ? []
+          : [
+              { role: 'reload' as const },
+              { role: 'toggleDevTools' as const },
+              { type: 'separator' as const },
+            ]),
         { role: 'resetZoom' },
         { role: 'zoomIn' },
         { role: 'zoomOut' },
@@ -113,10 +117,21 @@ function createWindow(): void {
       preload: join(__dirname, '../preload/preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: false,
     },
     titleBarStyle: 'hiddenInset',
     show: false,
+  });
+
+  // Block navigation to external URLs
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    if (!url.startsWith('file://')) {
+      event.preventDefault();
+    }
+  });
+
+  // Block new window creation
+  mainWindow.webContents.setWindowOpenHandler(() => {
+    return { action: 'deny' };
   });
 
   mainWindow.on('ready-to-show', () => {
@@ -142,6 +157,15 @@ function registerAllHandlers(): void {
   registerSnippetsHandlers(ipcMain);
   registerEnvVarsHandlers(ipcMain);
 }
+
+// Global error handlers to prevent silent crashes
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught exception:', error);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled rejection:', reason);
+});
 
 app.whenReady().then(() => {
   registerAllHandlers();

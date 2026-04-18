@@ -37,6 +37,7 @@ export default function App(): React.ReactElement {
   };
 
   const [editorSize, setEditorSize] = useState(50); // percentage
+  const [panelWidth, setPanelWidth] = useState(300); // pixels
 
   const handleResize = useCallback((delta: number) => {
     setEditorSize((prev) => {
@@ -48,6 +49,10 @@ export default function App(): React.ReactElement {
       return Math.min(80, Math.max(20, prev + percentage));
     });
   }, [layout]);
+
+  const handlePanelResize = useCallback((delta: number) => {
+    setPanelWidth((prev) => Math.min(600, Math.max(200, prev + delta)));
+  }, []);
 
   const handleCodeChange = useCallback(
     (value: string) => {
@@ -97,19 +102,26 @@ export default function App(): React.ReactElement {
 
       {/* Side Panel */}
       {activePanel !== 'none' && (
-        <div
-          style={{
-            width: 300,
-            background: 'var(--bg-surface)',
-            borderRight: '1px solid var(--border-subtle)',
-            overflow: 'hidden',
-          }}
-        >
-          {activePanel === 'npm-packages' && <NpmPackages />}
-          {activePanel === 'settings' && <SettingsPanel />}
-          {activePanel === 'snippets' && <Snippets />}
-          {activePanel === 'env-vars' && <EnvVars />}
-        </div>
+        <>
+          <div
+            style={{
+              width: panelWidth,
+              minWidth: 200,
+              maxWidth: 600,
+              background: 'var(--bg-surface)',
+              borderRight: '1px solid var(--border-subtle)',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            {activePanel === 'npm-packages' && <NpmPackages />}
+            {activePanel === 'settings' && <SettingsPanel />}
+            {activePanel === 'snippets' && <Snippets />}
+            {activePanel === 'env-vars' && <EnvVars />}
+          </div>
+          <Divider direction="horizontal" onResize={handlePanelResize} />
+        </>
       )}
 
       {/* Main Content */}
@@ -149,6 +161,7 @@ export default function App(): React.ReactElement {
                 autocomplete={settings.general.autocomplete}
                 hover={settings.general.hoverInfo}
                 signatures={settings.general.signatures}
+                vimKeys={settings.general.vimKeys}
                 snippets={snippets}
                 theme={getMonacoThemeId(settings.appearance.theme)}
                 magicResults={activeTab?.output}

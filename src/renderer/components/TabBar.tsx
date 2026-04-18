@@ -128,6 +128,7 @@ export default function TabBar({
             <div
               key={tab.id}
               onClick={() => onSelect(tab.id)}
+              onDoubleClick={() => startEditing(tab.id)}
               onContextMenu={(e) => handleContextMenu(e, tab.id)}
               style={{
                 display: 'flex',

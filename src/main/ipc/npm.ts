@@ -1,4 +1,5 @@
-import type { IpcMain, BrowserWindow } from 'electron';
+import type { IpcMain } from 'electron';
+import { BrowserWindow } from 'electron';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { IPC_CHANNELS, PACKAGES_FILE } from '../../shared/constants';
@@ -7,6 +8,23 @@ import { loadJson, saveJson, getDataDir, ensurePackagesDir } from '../services/s
 import type { InstalledPackage } from '../../shared/types';
 
 const execAsync = promisify(exec);
+
+// Strict validation: npm package names per the npm naming rules
+// Scoped: @scope/name, unscoped: name. Only alphanumeric, hyphens, dots, underscores allowed.
+const VALID_PKG_NAME = /^(@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/i;
+const VALID_VERSION = /^[a-z0-9][a-z0-9.\-+~^<>=* ]*$/i;
+
+function validatePackageName(name: string): void {
+  if (!name || name.length > 214 || !VALID_PKG_NAME.test(name)) {
+    throw new Error(`Invalid package name: ${name}`);
+  }
+}
+
+function validateVersion(version: string): void {
+  if (!VALID_VERSION.test(version)) {
+    throw new Error(`Invalid version: ${version}`);
+  }
+}
 
 export function registerNpmHandlers(ipcMain: IpcMain): void {
   // Search NPM registry
@@ -22,6 +40,9 @@ export function registerNpmHandlers(ipcMain: IpcMain): void {
   ipcMain.handle(
     IPC_CHANNELS.NPM_INSTALL,
     async (event, payload: { name: string; version?: string }) => {
+      validatePackageName(payload.name);
+      if (payload.version) validateVersion(payload.version);
+
       const dataDir = getDataDir();
       await ensurePackagesDir();
 
@@ -83,6 +104,7 @@ export function registerNpmHandlers(ipcMain: IpcMain): void {
   ipcMain.handle(
     IPC_CHANNELS.NPM_UNINSTALL,
     async (_event, payload: { name: string }) => {
+      validatePackageName(payload.name);
       const dataDir = getDataDir();
 
       try {

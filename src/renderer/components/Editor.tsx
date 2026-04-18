@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import * as monaco from 'monaco-editor';
+import { initVimMode, VimMode } from 'monaco-vim';
 import type { Snippet, OutputResult } from '../../shared/types';
 
 // Configure Monaco workers for electron-vite
@@ -89,6 +90,7 @@ export interface EditorProps {
   autocomplete?: boolean;
   hover?: boolean;
   signatures?: boolean;
+  vimKeys?: boolean;
   snippets?: Snippet[];
   onCreateSnippet?: (code: string) => void;
   magicResults?: OutputResult[];
@@ -109,12 +111,15 @@ export default function Editor({
   autocomplete = true,
   hover = true,
   signatures = true,
+  vimKeys = false,
   snippets = [],
   onCreateSnippet,
   magicResults = [],
 }: EditorProps): React.ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+  const vimModeRef = useRef<VimMode | null>(null);
+  const vimStatusRef = useRef<HTMLDivElement | null>(null);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
 
@@ -252,6 +257,47 @@ export default function Editor({
       parameterHints: { enabled: signatures },
     });
   }, [fontSize, fontFamily, lineNumbers, wordWrap, activeLine, invisibles, closeBrackets, autocomplete, hover, signatures]);
+
+  // Vim mode
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    if (vimKeys) {
+      if (!vimModeRef.current) {
+        // Create status bar element if not present
+        if (!vimStatusRef.current) {
+          vimStatusRef.current = document.createElement('div');
+          vimStatusRef.current.style.cssText =
+            'position:absolute;bottom:0;left:0;right:0;height:20px;background:var(--bg-surface);color:var(--text-secondary);font-family:var(--font-mono);font-size:11px;padding:0 8px;display:flex;align-items:center;z-index:10;border-top:1px solid var(--border-subtle);';
+          containerRef.current?.style.setProperty('padding-bottom', '20px');
+          containerRef.current?.appendChild(vimStatusRef.current);
+        }
+        vimModeRef.current = initVimMode(editor, vimStatusRef.current);
+      }
+    } else {
+      if (vimModeRef.current) {
+        vimModeRef.current.dispose();
+        vimModeRef.current = null;
+      }
+      if (vimStatusRef.current) {
+        vimStatusRef.current.remove();
+        vimStatusRef.current = null;
+        containerRef.current?.style.removeProperty('padding-bottom');
+      }
+    }
+
+    return () => {
+      if (vimModeRef.current) {
+        vimModeRef.current.dispose();
+        vimModeRef.current = null;
+      }
+      if (vimStatusRef.current) {
+        vimStatusRef.current.remove();
+        vimStatusRef.current = null;
+      }
+    };
+  }, [vimKeys]);
 
   // Update theme
   useEffect(() => {
