@@ -130,13 +130,13 @@
 
 ### Implementation for User Story 5
 
-- [ ] T038 [P] [US5] Implement NPM registry search client using registry.npmjs.org API in src/main/services/npm-registry.ts
-- [ ] T039 [P] [US5] Implement npm-search IPC handler in src/main/ipc/npm.ts
-- [ ] T040 [US5] Implement npm-install IPC handler — run npm install to ~/.runlet/node_modules/, update packages.json manifest, emit progress events in src/main/ipc/npm.ts
-- [ ] T041 [US5] Implement npm-uninstall and npm-list IPC handlers in src/main/ipc/npm.ts
-- [ ] T042 [US5] Configure execution sandbox to resolve require/import from ~/.runlet/node_modules/ in src/main/executor/sandbox.ts
-- [ ] T043 [US5] Create NpmPackages panel UI with search input, results list with "Add" button, installed packages list with "Remove" button, and install progress indicator in src/renderer/components/NpmPackages/NpmPackages.tsx
-- [ ] T044 [US5] Wire NpmPackages panel to activity bar toggle in src/renderer/components/ActivityBar.tsx
+- [x] T038 [P] [US5] Implement NPM registry search client using registry.npmjs.org API in src/main/services/npm-registry.ts
+- [x] T039 [P] [US5] Implement npm-search IPC handler in src/main/ipc/npm.ts
+- [x] T040 [US5] Implement npm-install IPC handler — run npm install to ~/.runlet/node_modules/, update packages.json manifest, emit progress events in src/main/ipc/npm.ts
+- [x] T041 [US5] Implement npm-uninstall and npm-list IPC handlers in src/main/ipc/npm.ts
+- [x] T042 [US5] Configure execution sandbox to resolve require/import from ~/.runlet/node_modules/ in src/main/executor/sandbox.ts
+- [x] T043 [US5] Create NpmPackages panel UI with search input, results list with "Add" button, installed packages list with "Remove" button, and install progress indicator in src/renderer/components/NpmPackages/NpmPackages.tsx
+- [x] T044 [US5] Wire NpmPackages panel to activity bar toggle in src/renderer/components/ActivityBar.tsx
 
 **Checkpoint**: NPM packages can be searched, installed, removed, and used in user code.
 

@@ -7,11 +7,15 @@ import Editor from './components/Editor';
 import Output from './components/Output';
 import Divider from './components/Divider';
 import TabBar from './components/TabBar';
+import ActivityBar from './components/ActivityBar';
+import NpmPackages from './components/NpmPackages/NpmPackages';
 
 export default function App(): React.ReactElement {
   const outputVisible = useAppStore((s) => s.outputVisible);
   const layout = useAppStore((s) => s.layout);
   const updateTabContent = useAppStore((s) => s.updateTabContent);
+  const activePanel = useAppStore((s) => s.activePanel);
+  const setActivePanel = useAppStore((s) => s.setActivePanel);
 
   const { tabs, activeTabId, addTab, closeTab, setActiveTab, updateTabTitle } = useTabs();
   const { settings } = useSettings();
@@ -53,41 +57,36 @@ export default function App(): React.ReactElement {
   return (
     <div style={{ display: 'flex', height: '100%', width: '100%' }}>
       {/* Activity Bar */}
-      <div
-        style={{
-          width: 48,
-          background: '#252526',
-          borderRight: '1px solid #3c3c3c',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          paddingTop: 8,
-          gap: 4,
-        }}
-      >
-        {!settings.general.autoRun && (
-          <button
-            onClick={handleRunClick}
-            disabled={activeTab?.isRunning}
-            style={{
-              width: 36,
-              height: 36,
-              border: 'none',
-              borderRadius: 4,
-              background: '#0e639c',
-              color: '#fff',
-              cursor: 'pointer',
-              fontSize: 16,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            title="Run Code"
-          >
-            ▶
-          </button>
-        )}
-      </div>
+      <ActivityBar
+        activePanel={activePanel}
+        onTogglePanel={setActivePanel}
+        autoRun={settings.general.autoRun}
+        onRun={handleRunClick}
+        isRunning={activeTab?.isRunning}
+      />
+
+      {/* Side Panel */}
+      {activePanel !== 'none' && (
+        <div
+          style={{
+            width: 300,
+            background: '#252526',
+            borderRight: '1px solid #3c3c3c',
+            overflow: 'hidden',
+          }}
+        >
+          {activePanel === 'npm-packages' && <NpmPackages />}
+          {activePanel === 'settings' && (
+            <div style={{ padding: 12, color: '#969696', fontSize: 13 }}>Settings panel (Phase 9)</div>
+          )}
+          {activePanel === 'snippets' && (
+            <div style={{ padding: 12, color: '#969696', fontSize: 13 }}>Snippets panel (Phase 8)</div>
+          )}
+          {activePanel === 'env-vars' && (
+            <div style={{ padding: 12, color: '#969696', fontSize: 13 }}>Env vars panel (Phase 13)</div>
+          )}
+        </div>
+      )}
 
       {/* Main Content */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
