@@ -34,14 +34,14 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 Create Electron main process entry with BrowserWindow creation, context isolation, and preload script loading in src/main/main.ts
-- [ ] T008 Create preload script exposing IPC bridge via contextBridge.exposeInMainWorld in src/main/preload.ts
-- [ ] T009 [P] Implement JSON file persistence service (read/write/ensure-dir for ~/.runlet/) in src/main/services/storage.ts
-- [ ] T010 [P] Create renderer entry HTML in src/renderer/index.html
-- [ ] T011 Create root React App component with basic layout shell (activity bar, tab bar, editor area, output area) in src/renderer/App.tsx
-- [ ] T012 Create Zustand store with tab state, settings state, and UI state slices in src/renderer/store/index.ts
-- [ ] T013 Implement settings IPC handlers (settings-load, settings-save) using storage service in src/main/ipc/settings.ts
-- [ ] T014 Implement useSettings hook that loads settings on mount and persists on change via IPC in src/renderer/hooks/useSettings.ts
+- [x] T007 Create Electron main process entry with BrowserWindow creation, context isolation, and preload script loading in src/main/main.ts
+- [x] T008 Create preload script exposing IPC bridge via contextBridge.exposeInMainWorld in src/main/preload.ts
+- [x] T009 [P] Implement JSON file persistence service (read/write/ensure-dir for ~/.runlet/) in src/main/services/storage.ts
+- [x] T010 [P] Create renderer entry HTML in src/renderer/index.html
+- [x] T011 Create root React App component with basic layout shell (activity bar, tab bar, editor area, output area) in src/renderer/App.tsx
+- [x] T012 Create Zustand store with tab state, settings state, and UI state slices in src/renderer/store/index.ts
+- [x] T013 Implement settings IPC handlers (settings-load, settings-save) using storage service in src/main/ipc/settings.ts
+- [x] T014 Implement useSettings hook that loads settings on mount and persists on change via IPC in src/renderer/hooks/useSettings.ts
 
 **Checkpoint**: Foundation ready — Electron app launches with empty shell, settings persist to ~/.runlet/settings.json
 
@@ -55,15 +55,15 @@
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Implement Babel AST transformer for per-line result capture — parse code, wrap top-level statements to push results into __RESULTS__ array with line numbers in src/main/executor/transformer.ts
-- [ ] T016 [US1] Implement execution sandbox with controlled globals (console, require, setTimeout, etc.) in src/main/executor/sandbox.ts
-- [ ] T017 [US1] Implement code runner using vm.runInNewContext with timeout, executing transformed code and returning OutputResult[] in src/main/executor/runner.ts
-- [ ] T018 [US1] Implement execute-code and cancel-execution IPC handlers connecting renderer requests to executor pipeline in src/main/ipc/execute.ts
-- [ ] T019 [US1] Create Monaco editor wrapper component with basic JavaScript language support in src/renderer/components/Editor.tsx
-- [ ] T020 [US1] Create Output pane component that displays per-line results aligned with source lines in src/renderer/components/Output.tsx
-- [ ] T021 [US1] Implement useExecution hook with debounced auto-run (triggers execute-code IPC on code change) and manual run support in src/renderer/hooks/useExecution.ts
-- [ ] T022 [US1] Wire Editor + Output + useExecution together in App.tsx with split-pane layout (editor left, output right) in src/renderer/App.tsx
-- [ ] T023 [US1] Implement resizable pane divider component (drag to resize editor/output widths) in src/renderer/components/Divider.tsx
+- [x] T015 [US1] Implement Babel AST transformer for per-line result capture — parse code, wrap top-level statements to push results into __RESULTS__ array with line numbers in src/main/executor/transformer.ts
+- [x] T016 [US1] Implement execution sandbox with controlled globals (console, require, setTimeout, etc.) in src/main/executor/sandbox.ts
+- [x] T017 [US1] Implement code runner using vm.runInNewContext with timeout, executing transformed code and returning OutputResult[] in src/main/executor/runner.ts
+- [x] T018 [US1] Implement execute-code and cancel-execution IPC handlers connecting renderer requests to executor pipeline in src/main/ipc/execute.ts
+- [x] T019 [US1] Create Monaco editor wrapper component with basic JavaScript language support in src/renderer/components/Editor.tsx
+- [x] T020 [US1] Create Output pane component that displays per-line results aligned with source lines in src/renderer/components/Output.tsx
+- [x] T021 [US1] Implement useExecution hook with debounced auto-run (triggers execute-code IPC on code change) and manual run support in src/renderer/hooks/useExecution.ts
+- [x] T022 [US1] Wire Editor + Output + useExecution together in App.tsx with split-pane layout (editor left, output right) in src/renderer/App.tsx
+- [x] T023 [US1] Implement resizable pane divider component (drag to resize editor/output widths) in src/renderer/components/Divider.tsx
 
 **Checkpoint**: App shows live per-line JavaScript results. Auto-run fires on keystroke with debounce. Manual "Run" button works when auto-run is off.
 
@@ -77,12 +77,12 @@
 
 ### Implementation for User Story 2
 
-- [ ] T024 [US2] Implement useTabs hook for tab CRUD (create, close, switch, reorder, rename) backed by Zustand store in src/renderer/hooks/useTabs.ts
-- [ ] T025 [US2] Create TabBar component with tab list, active tab indicator, new-tab button, close button, and right-click "Edit Tab Title" context menu in src/renderer/components/TabBar.tsx
-- [ ] T026 [US2] Implement tab state persistence — save open tabs to ~/.runlet/tabs.json on change, restore on app launch via tabs-load/tabs-save IPC in src/main/ipc/settings.ts
-- [ ] T027 [US2] Integrate TabBar with Editor and Output — switching tabs swaps editor content and output results independently in src/renderer/App.tsx
-- [ ] T028 [US2] Implement tab title derivation — display first line of code as title when no custom title is set in src/renderer/components/TabBar.tsx
-- [ ] T029 [US2] Implement confirm-close dialog when confirmClose setting is enabled in src/renderer/components/TabBar.tsx
+- [x] T024 [US2] Implement useTabs hook for tab CRUD (create, close, switch, reorder, rename) backed by Zustand store in src/renderer/hooks/useTabs.ts
+- [x] T025 [US2] Create TabBar component with tab list, active tab indicator, new-tab button, close button, and right-click "Edit Tab Title" context menu in src/renderer/components/TabBar.tsx
+- [x] T026 [US2] Implement tab state persistence — save open tabs to ~/.runlet/tabs.json on change, restore on app launch via tabs-load/tabs-save IPC in src/main/ipc/settings.ts
+- [x] T027 [US2] Integrate TabBar with Editor and Output — switching tabs swaps editor content and output results independently in src/renderer/App.tsx
+- [x] T028 [US2] Implement tab title derivation — display first line of code as title when no custom title is set in src/renderer/components/TabBar.tsx
+- [x] T029 [US2] Implement confirm-close dialog when confirmClose setting is enabled in src/renderer/components/TabBar.tsx
 
 **Checkpoint**: Multiple tabs work independently. State persists across app restarts.
 
