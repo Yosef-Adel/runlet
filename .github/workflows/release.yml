@@ -39,6 +39,18 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
+      # Cache Electron binary (downloaded separately from npm packages)
+      - name: Cache Electron binary
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/Library/Caches/electron
+            ${{ runner.os == 'Windows' && format('{0}/electron/Cache', env.LOCALAPPDATA) || '/tmp/electron-unused' }}
+          key: electron-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            electron-${{ runner.os }}-
+
       # Linux dependencies for Electron
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
@@ -49,6 +61,12 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         run: npm ci
+        env:
+          # Increase download timeout and retries for Electron binary
+          ELECTRON_GET_NO_PROGRESS: true
+          npm_config_fetch_retry_mintimeout: 60000
+          npm_config_fetch_retry_maxtimeout: 300000
+          npm_config_fetch_retries: 5
 
       # Build the app with electron-vite
       - name: Build app
