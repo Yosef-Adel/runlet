@@ -7,6 +7,7 @@ import type {
   EnvironmentVariable,
   InstalledPackage,
   OutputResult,
+  ConsoleEntry,
   ActivePanel,
   LayoutOrientation,
 } from '../../shared/types';
@@ -55,6 +56,10 @@ interface AppState {
   // Installed Packages
   packages: InstalledPackage[];
   setPackages: (packages: InstalledPackage[]) => void;
+
+  // Execution state
+  executionStates: Record<string, { consoleOutput: ConsoleEntry[]; error: { message: string; line: number | null } | null; executionTime: number | null }>;
+  setExecutionState: (tabId: string, state: { consoleOutput: ConsoleEntry[]; error: { message: string; line: number | null } | null; executionTime: number | null }) => void;
 
   // UI  
   activePanel: ActivePanel;
@@ -127,6 +132,13 @@ export const useAppStore = create<AppState>((set) => ({
   // Installed Packages
   packages: [],
   setPackages: (packages) => set({ packages }),
+
+  // Execution state
+  executionStates: {},
+  setExecutionState: (tabId, execState) =>
+    set((state) => ({
+      executionStates: { ...state.executionStates, [tabId]: execState },
+    })),
 
   // UI
   activePanel: 'none',

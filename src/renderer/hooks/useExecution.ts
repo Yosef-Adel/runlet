@@ -1,26 +1,18 @@
 import { useCallback, useRef, useEffect } from 'react';
 import { useAppStore } from '../store';
-import type { ExecutionResponse, ExecutionError, ConsoleEntry } from '../../shared/types';
+import type { ExecutionResponse, ExecutionError } from '../../shared/types';
 import { AUTO_RUN_DEBOUNCE_MS } from '../../shared/constants';
-
-export interface ExecutionState {
-  consoleOutput: ConsoleEntry[];
-  error: { message: string; line: number | null } | null;
-  executionTime: number | null;
-}
-
-const executionStates = new Map<string, ExecutionState>();
 
 export function useExecution(): {
   execute: (tabId?: string) => Promise<void>;
   cancel: () => Promise<void>;
-  getExecutionState: (tabId: string) => ExecutionState;
 } {
   const tabs = useAppStore((s) => s.tabs);
   const activeTabId = useAppStore((s) => s.activeTabId);
   const settings = useAppStore((s) => s.settings);
   const updateTabOutput = useAppStore((s) => s.updateTabOutput);
   const setTabRunning = useAppStore((s) => s.setTabRunning);
+  const setExecutionState = useAppStore((s) => s.setExecutionState);
 
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -56,7 +48,7 @@ export function useExecution(): {
         if (result.success) {
           const resp = result as ExecutionResponse;
           updateTabOutput(id, resp.results);
-          executionStates.set(id, {
+          setExecutionState(id, {
             consoleOutput: resp.consoleOutput,
             error: null,
             executionTime: resp.executionTime,
@@ -64,7 +56,7 @@ export function useExecution(): {
         } else {
           const errResp = result as ExecutionError;
           updateTabOutput(id, []);
-          executionStates.set(id, {
+          setExecutionState(id, {
             consoleOutput: [],
             error: { message: errResp.error.message, line: errResp.error.line },
             executionTime: null,
@@ -72,7 +64,7 @@ export function useExecution(): {
         }
       } catch (err) {
         updateTabOutput(id, []);
-        executionStates.set(id, {
+        setExecutionState(id, {
           consoleOutput: [],
           error: { message: (err as Error).message, line: null },
           executionTime: null,
@@ -81,7 +73,7 @@ export function useExecution(): {
         setTabRunning(id, false);
       }
     },
-    [activeTabId, tabs, settings, updateTabOutput, setTabRunning]
+    [activeTabId, tabs, settings, updateTabOutput, setTabRunning, setExecutionState]
   );
 
   const cancel = useCallback(async () => {
@@ -103,7 +95,7 @@ export function useExecution(): {
     // Skip auto-run for empty content
     if (!activeTab.content.trim()) {
       updateTabOutput(activeTabId, []);
-      executionStates.set(activeTabId, {
+      setExecutionState(activeTabId, {
         consoleOutput: [],
         error: null,
         executionTime: null,
@@ -124,17 +116,7 @@ export function useExecution(): {
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [activeTab?.content, activeTabId, settings.general.autoRun, execute, updateTabOutput]);
+  }, [activeTab?.content, activeTabId, settings.general.autoRun, execute, updateTabOutput, setExecutionState]);
 
-  const getExecutionState = useCallback((tabId: string): ExecutionState => {
-    return (
-      executionStates.get(tabId) ?? {
-        consoleOutput: [],
-        error: null,
-        executionTime: null,
-      }
-    );
-  }, []);
-
-  return { execute, cancel, getExecutionState };
+  return { execute, cancel };
 }

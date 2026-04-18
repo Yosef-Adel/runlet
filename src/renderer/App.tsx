@@ -27,9 +27,14 @@ export default function App(): React.ReactElement {
 
   const { tabs, activeTabId, addTab, closeTab, setActiveTab, updateTabTitle } = useTabs();
   const { settings } = useSettings();
-  const { execute, getExecutionState } = useExecution();
+  const { execute } = useExecution();
 
   const activeTab = tabs.find((t) => t.id === activeTabId);
+  const execState = useAppStore((s) => activeTabId ? s.executionStates[activeTabId] : null) ?? {
+    consoleOutput: [],
+    error: null,
+    executionTime: null,
+  };
 
   const [editorSize, setEditorSize] = useState(50); // percentage
 
@@ -74,8 +79,6 @@ export default function App(): React.ReactElement {
       updateTabContent(activeTab.id, result.formatted);
     }
   }, [activeTab, settings.formatting, updateTabContent]);
-
-  const execState = activeTab ? getExecutionState(activeTab.id) : null;
 
   const isHorizontal = layout === 'horizontal';
   const flexDirection = isHorizontal ? 'row' as const : 'column' as const;
