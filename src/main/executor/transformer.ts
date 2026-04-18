@@ -52,8 +52,18 @@ export function transformCode(code: string, options: TransformOptions): string {
         return;
       }
 
-      const line = path.node.loc?.start.line ?? 0;
+      // Skip console.* calls — they are captured by the sandbox's console proxy
       const expr = path.node.expression;
+      if (
+        t.isCallExpression(expr) &&
+        t.isMemberExpression(expr.callee) &&
+        t.isIdentifier(expr.callee.object) &&
+        expr.callee.object.name === 'console'
+      ) {
+        return;
+      }
+
+      const line = path.node.loc?.start.line ?? 0;
 
       // Replace with: __RESULTS__.push({ line, value: <expr>, type: typeof <expr> })
       const captureExpr = t.callExpression(

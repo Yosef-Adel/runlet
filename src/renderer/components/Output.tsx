@@ -144,6 +144,31 @@ export default function Output({
       );
     }
 
+    // Render console entries that don't have a line number (unmatched)
+    const unmatchedConsole = truncatedConsole.filter((c) => c.line === null || c.line === undefined);
+    if (unmatchedConsole.length > 0) {
+      for (const [idx, c] of unmatchedConsole.entries()) {
+        lines.push(
+          <div
+            key={`unmatched-console-${idx}`}
+            style={{
+              minHeight: `${fontSize * 1.5}px`,
+              lineHeight: `${fontSize * 1.5}px`,
+              paddingLeft: 12,
+              paddingRight: 12,
+              display: 'flex',
+              alignItems: 'center',
+              borderBottom: '1px solid #2a2a2a',
+            }}
+          >
+            <span style={{ color: getConsoleMethodColor(c.method), marginRight: 8 }}>
+              {c.args.map((a) => String(a)).join(' ')}
+            </span>
+          </div>
+        );
+      }
+    }
+
     return lines;
   };
 
