@@ -39,17 +39,24 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      # Cache Electron binary (downloaded separately from npm packages)
-      - name: Cache Electron binary
+      # Cache Electron binary — downloaded separately by electron's install.js, not by npm
+      - name: Cache Electron binary (macOS / Linux)
+        if: runner.os != 'Windows'
         uses: actions/cache@v4
         with:
           path: |
             ~/.cache/electron
             ~/Library/Caches/electron
-            ${{ runner.os == 'Windows' && format('{0}/electron/Cache', env.LOCALAPPDATA) || '/tmp/electron-unused' }}
           key: electron-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            electron-${{ runner.os }}-
+          restore-keys: electron-${{ runner.os }}-
+
+      - name: Cache Electron binary (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.LOCALAPPDATA }}\electron\Cache
+          key: electron-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: electron-${{ runner.os }}-
 
       # Linux dependencies for Electron
       - name: Install Linux dependencies
@@ -58,15 +65,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rpm dpkg fakeroot libx11-dev libxkbfile-dev
 
-      # Install dependencies
+      # Install dependencies — retry up to 3 times to survive transient 504s from
+      # GitHub releases (Electron binary download is not controlled by npm retry config)
       - name: Install dependencies
-        run: npm ci
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            npm ci && break
+            echo "Attempt $attempt failed — retrying in 20s..."
+            sleep 20
+          done
         env:
-          # Increase download timeout and retries for Electron binary
           ELECTRON_GET_NO_PROGRESS: true
-          npm_config_fetch_retry_mintimeout: 60000
-          npm_config_fetch_retry_maxtimeout: 300000
-          npm_config_fetch_retries: 5
 
       # Build the app with electron-vite
       - name: Build app
