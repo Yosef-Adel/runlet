@@ -202,11 +202,11 @@
 
 ### Implementation for User Story 9
 
-- [ ] T058 [US9] Implement General settings tab with all toggles (autoRun, lineWrap, vimKeys, closeBrackets, matchLines, scrolling, confirmClose, autocomplete, linting, hoverInfo, signatures) in src/renderer/components/Settings/GeneralSettings.tsx
-- [ ] T059 [US9] Apply general settings reactively to Monaco editor (wordWrap, vim extension, autoClosingBrackets, quickSuggestions, diagnostics, hover, parameterHints) in src/renderer/components/Editor.tsx
-- [ ] T060 [US9] Implement synchronous scrolling mode — link editor and output scroll positions when scrolling setting is "synchronous" in src/renderer/components/Editor.tsx and src/renderer/components/Output.tsx
-- [ ] T061 [US9] Implement automatic scrolling mode — auto-scroll output pane to bottom as results appear when scrolling setting is "automatic" in src/renderer/components/Output.tsx
-- [ ] T062 [US9] Toggle Run button visibility based on autoRun setting in src/renderer/components/ActivityBar.tsx
+- [x] T058 [US9] Implement General settings tab with all toggles (autoRun, lineWrap, vimKeys, closeBrackets, matchLines, scrolling, confirmClose, autocomplete, linting, hoverInfo, signatures) in src/renderer/components/Settings/GeneralSettings.tsx
+- [x] T059 [US9] Apply general settings reactively to Monaco editor (wordWrap, vim extension, autoClosingBrackets, quickSuggestions, diagnostics, hover, parameterHints) in src/renderer/components/Editor.tsx
+- [x] T060 [US9] Implement synchronous scrolling mode — link editor and output scroll positions when scrolling setting is "synchronous" in src/renderer/components/Editor.tsx and src/renderer/components/Output.tsx
+- [x] T061 [US9] Implement automatic scrolling mode — auto-scroll output pane to bottom as results appear when scrolling setting is "automatic" in src/renderer/components/Output.tsx
+- [x] T062 [US9] Toggle Run button visibility based on autoRun setting in src/renderer/components/ActivityBar.tsx
 
 **Checkpoint**: All general editor settings take effect immediately.
 
@@ -220,11 +220,11 @@
 
 ### Implementation for User Story 10
 
-- [ ] T063 [P] [US10] Implement Prettier wrapper service in src/main/services/prettier.ts
-- [ ] T064 [US10] Implement format-code IPC handler in src/main/ipc/format.ts
-- [ ] T065 [US10] Implement Formatting settings tab with auto-format toggle, tabWidth, useTabs, semi, singleQuote, trailingComma in src/renderer/components/Settings/FormattingSettings.tsx
-- [ ] T066 [US10] Add "Format Code" action to activity bar/action menu and wire to format-code IPC in src/renderer/components/ActivityBar.tsx
-- [ ] T067 [US10] Implement auto-format-on-run — when autoFormat setting is enabled, format code before manual execution in src/renderer/hooks/useExecution.ts
+- [x] T063 [P] [US10] Implement Prettier wrapper service in src/main/services/prettier.ts
+- [x] T064 [US10] Implement format-code IPC handler in src/main/ipc/format.ts
+- [x] T065 [US10] Implement Formatting settings tab with auto-format toggle, tabWidth, useTabs, semi, singleQuote, trailingComma in src/renderer/components/Settings/FormattingSettings.tsx
+- [x] T066 [US10] Add "Format Code" action to activity bar/action menu and wire to format-code IPC in src/renderer/components/ActivityBar.tsx
+- [x] T067 [US10] Implement auto-format-on-run — when autoFormat setting is enabled, format code before manual execution in src/renderer/hooks/useExecution.ts
 
 **Checkpoint**: Format button works. Auto-format on run works. Formatting settings applied.
 
@@ -238,10 +238,10 @@
 
 ### Implementation for User Story 11
 
-- [ ] T068 [P] [US11] Implement env-vars-load and env-vars-save IPC handlers using storage service in src/main/ipc/env-vars.ts
-- [ ] T069 [US11] Inject saved environment variables into execution sandbox process.env in src/main/executor/sandbox.ts
-- [ ] T070 [US11] Create EnvVars panel UI with key-value input, add/edit/delete/save controls in src/renderer/components/EnvVars/EnvVars.tsx
-- [ ] T071 [US11] Wire EnvVars panel to activity bar toggle in src/renderer/components/ActivityBar.tsx
+- [x] T068 [P] [US11] Implement env-vars-load and env-vars-save IPC handlers using storage service in src/main/ipc/env-vars.ts
+- [x] T069 [US11] Inject saved environment variables into execution sandbox process.env in src/main/executor/sandbox.ts
+- [x] T070 [US11] Create EnvVars panel UI with key-value input, add/edit/delete/save controls in src/renderer/components/EnvVars/EnvVars.tsx
+- [x] T071 [US11] Wire EnvVars panel to activity bar toggle in src/renderer/components/ActivityBar.tsx
 
 **Checkpoint**: Environment variables persist and are accessible in user code via process.env.
 
@@ -255,9 +255,9 @@
 
 ### Implementation for User Story 12
 
-- [ ] T072 [US12] Extend Babel transformer to conditionally load proposal plugins (pipeline, decorators, partialApplication, throwExpressions, doExpressions, functionSent, regexpModifiers) based on settings in src/main/executor/transformer.ts
-- [ ] T073 [US12] Install Babel proposal plugin packages: @babel/plugin-proposal-pipeline-operator, @babel/plugin-proposal-decorators, @babel/plugin-proposal-partial-application, @babel/plugin-proposal-throw-expressions, @babel/plugin-proposal-do-expressions, @babel/plugin-proposal-function-sent in package.json
-- [ ] T074 [US12] Implement Build settings tab with TypeScript toggle, JSX toggle, and individual proposal toggles in src/renderer/components/Settings/BuildSettings.tsx
+- [x] T072 [US12] Extend Babel transformer to conditionally load proposal plugins (pipeline, decorators, partialApplication, throwExpressions, doExpressions, functionSent, regexpModifiers) based on settings in src/main/executor/transformer.ts
+- [x] T073 [US12] Install Babel proposal plugin packages: @babel/plugin-proposal-pipeline-operator, @babel/plugin-proposal-decorators, @babel/plugin-proposal-partial-application, @babel/plugin-proposal-throw-expressions, @babel/plugin-proposal-do-expressions, @babel/plugin-proposal-function-sent in package.json
+- [x] T074 [US12] Implement Build settings tab with TypeScript toggle, JSX toggle, and individual proposal toggles in src/renderer/components/Settings/BuildSettings.tsx
 
 **Checkpoint**: Enabling a proposal in settings allows using that syntax in code.
 
@@ -271,10 +271,10 @@
 
 ### Implementation for User Story 13
 
-- [ ] T075 [US13] Add layout orientation state (horizontal/vertical) to Zustand store and persist in settings in src/renderer/store/index.ts
-- [ ] T076 [US13] Update App.tsx split-pane layout to support vertical orientation (editor top, output bottom) based on layout setting in src/renderer/App.tsx
-- [ ] T077 [US13] Implement View menu or toolbar with layout toggle (horizontal/vertical), output pane visibility toggle, activity bar toggle, tab bar visibility toggle in src/renderer/App.tsx
-- [ ] T078 [US13] Implement output pane show/hide based on visibility setting in src/renderer/App.tsx
+- [x] T075 [US13] Add layout orientation state (horizontal/vertical) to Zustand store and persist in settings in src/renderer/store/index.ts
+- [x] T076 [US13] Update App.tsx split-pane layout to support vertical orientation (editor top, output bottom) based on layout setting in src/renderer/App.tsx
+- [x] T077 [US13] Implement View menu or toolbar with layout toggle (horizontal/vertical), output pane visibility toggle, activity bar toggle, tab bar visibility toggle in src/renderer/App.tsx
+- [x] T078 [US13] Implement output pane show/hide based on visibility setting in src/renderer/App.tsx
 
 **Checkpoint**: Layout toggles work. Pane visibility toggleable. Horizontal/vertical switch works.
 
@@ -288,9 +288,9 @@
 
 ### Implementation for User Story 14
 
-- [ ] T079 [US14] Extend Babel transformer to inject loop counter variables and guard checks into while, for, do-while, for-in, for-of loops in src/main/executor/transformer.ts
-- [ ] T080 [US14] Implement Advanced settings tab with expressionResults toggle, showUndefined toggle, loopProtection toggle, loopThreshold input in src/renderer/components/Settings/AdvancedSettings.tsx
-- [ ] T081 [US14] Pass loopProtection and loopThreshold from settings through execute-code IPC to transformer in src/main/ipc/execute.ts
+- [x] T079 [US14] Extend Babel transformer to inject loop counter variables and guard checks into while, for, do-while, for-in, for-of loops in src/main/executor/transformer.ts
+- [x] T080 [US14] Implement Advanced settings tab with expressionResults toggle, showUndefined toggle, loopProtection toggle, loopThreshold input in src/renderer/components/Settings/AdvancedSettings.tsx
+- [x] T081 [US14] Pass loopProtection and loopThreshold from settings through execute-code IPC to transformer in src/main/ipc/execute.ts
 
 **Checkpoint**: Infinite loops halt at threshold. Loop protection can be toggled and threshold configured.
 

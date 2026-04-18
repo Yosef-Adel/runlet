@@ -11,6 +11,7 @@ import ActivityBar from './components/ActivityBar';
 import NpmPackages from './components/NpmPackages/NpmPackages';
 import Snippets from './components/Snippets/Snippets';
 import SettingsPanel from './components/Settings/Settings';
+import EnvVars from './components/EnvVars/EnvVars';
 import { registerThemes, getMonacoThemeId } from './themes';
 
 // Register custom themes once
@@ -56,6 +57,24 @@ export default function App(): React.ReactElement {
     execute();
   }, [execute]);
 
+  const handleFormatClick = useCallback(async () => {
+    if (!activeTab) return;
+    const result = (await window.api.formatCode({
+      code: activeTab.content,
+      language: activeTab.language,
+      options: {
+        tabWidth: settings.formatting.tabWidth,
+        useTabs: settings.formatting.useTabs,
+        semi: settings.formatting.semi,
+        singleQuote: settings.formatting.singleQuote,
+        trailingComma: settings.formatting.trailingComma,
+      },
+    })) as { success: boolean; formatted?: string };
+    if (result.success && result.formatted) {
+      updateTabContent(activeTab.id, result.formatted);
+    }
+  }, [activeTab, settings.formatting, updateTabContent]);
+
   const execState = activeTab ? getExecutionState(activeTab.id) : null;
 
   const isHorizontal = layout === 'horizontal';
@@ -69,6 +88,7 @@ export default function App(): React.ReactElement {
         onTogglePanel={setActivePanel}
         autoRun={settings.general.autoRun}
         onRun={handleRunClick}
+        onFormat={handleFormatClick}
         isRunning={activeTab?.isRunning}
       />
 
@@ -85,9 +105,7 @@ export default function App(): React.ReactElement {
           {activePanel === 'npm-packages' && <NpmPackages />}
           {activePanel === 'settings' && <SettingsPanel />}
           {activePanel === 'snippets' && <Snippets />}
-          {activePanel === 'env-vars' && (
-            <div style={{ padding: 12, color: '#969696', fontSize: 13 }}>Env vars panel (Phase 13)</div>
-          )}
+          {activePanel === 'env-vars' && <EnvVars />}
         </div>
       )}
 

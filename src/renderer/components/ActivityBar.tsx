@@ -6,6 +6,7 @@ export interface ActivityBarProps {
   onTogglePanel: (panel: ActivePanel) => void;
   autoRun: boolean;
   onRun?: () => void;
+  onFormat?: () => void;
   isRunning?: boolean;
 }
 
@@ -27,6 +28,7 @@ export default function ActivityBar({
   onTogglePanel,
   autoRun,
   onRun,
+  onFormat,
   isRunning,
 }: ActivityBarProps): React.ReactElement {
   return (
@@ -64,6 +66,30 @@ export default function ActivityBar({
           title="Run Code"
         >
           ▶
+        </button>
+      )}
+
+      {/* Format button */}
+      {onFormat && (
+        <button
+          onClick={onFormat}
+          style={{
+            width: 36,
+            height: 36,
+            border: 'none',
+            borderRadius: 4,
+            background: 'transparent',
+            color: '#969696',
+            cursor: 'pointer',
+            fontSize: 16,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 8,
+          }}
+          title="Format Code"
+        >
+          ✨
         </button>
       )}
 
