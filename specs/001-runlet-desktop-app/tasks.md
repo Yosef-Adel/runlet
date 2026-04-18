@@ -168,11 +168,11 @@
 
 ### Implementation for User Story 7
 
-- [ ] T050 [P] [US7] Define Monaco theme definitions for dark, light, monokai, solarized-dark, solarized-light, dracula, nord in src/renderer/themes/dark.ts, light.ts, and src/renderer/themes/index.ts
-- [ ] T051 [US7] Create Settings panel with tabbed interface (General, Build, Formatting, Appearance, Advanced) in src/renderer/components/Settings/Settings.tsx
-- [ ] T052 [US7] Implement Appearance settings tab with theme selector, font family, font size, line numbers, invisibles, active line, tab bar, output highlighting, activity bar toggles in src/renderer/components/Settings/AppearanceSettings.tsx
-- [ ] T053 [US7] Apply appearance settings reactively — theme changes update Monaco editor and output pane immediately via Zustand subscription in src/renderer/components/Editor.tsx and src/renderer/components/Output.tsx
-- [ ] T054 [US7] Wire Settings panel to activity bar toggle in src/renderer/components/ActivityBar.tsx
+- [x] T050 [P] [US7] Define Monaco theme definitions for dark, light, monokai, solarized-dark, solarized-light, dracula, nord in src/renderer/themes/dark.ts, light.ts, and src/renderer/themes/index.ts
+- [x] T051 [US7] Create Settings panel with tabbed interface (General, Build, Formatting, Appearance, Advanced) in src/renderer/components/Settings/Settings.tsx
+- [x] T052 [US7] Implement Appearance settings tab with theme selector, font family, font size, line numbers, invisibles, active line, tab bar, output highlighting, activity bar toggles in src/renderer/components/Settings/AppearanceSettings.tsx
+- [x] T053 [US7] Apply appearance settings reactively — theme changes update Monaco editor and output pane immediately via Zustand subscription in src/renderer/components/Editor.tsx and src/renderer/components/Output.tsx
+- [x] T054 [US7] Wire Settings panel to activity bar toggle in src/renderer/components/ActivityBar.tsx
 
 **Checkpoint**: Theme switching, font changes, and all visual toggles applied immediately.
 

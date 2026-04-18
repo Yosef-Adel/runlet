@@ -10,6 +10,11 @@ import TabBar from './components/TabBar';
 import ActivityBar from './components/ActivityBar';
 import NpmPackages from './components/NpmPackages/NpmPackages';
 import Snippets from './components/Snippets/Snippets';
+import SettingsPanel from './components/Settings/Settings';
+import { registerThemes, getMonacoThemeId } from './themes';
+
+// Register custom themes once
+registerThemes();
 
 export default function App(): React.ReactElement {
   const outputVisible = useAppStore((s) => s.outputVisible);
@@ -78,9 +83,7 @@ export default function App(): React.ReactElement {
           }}
         >
           {activePanel === 'npm-packages' && <NpmPackages />}
-          {activePanel === 'settings' && (
-            <div style={{ padding: 12, color: '#969696', fontSize: 13 }}>Settings panel (Phase 9)</div>
-          )}
+          {activePanel === 'settings' && <SettingsPanel />}
           {activePanel === 'snippets' && <Snippets />}
           {activePanel === 'env-vars' && (
             <div style={{ padding: 12, color: '#969696', fontSize: 13 }}>Env vars panel (Phase 13)</div>
@@ -126,6 +129,7 @@ export default function App(): React.ReactElement {
                 hover={settings.general.hoverInfo}
                 signatures={settings.general.signatures}
                 snippets={snippets}
+                theme={getMonacoThemeId(settings.appearance.theme)}
               />
             )}
           </div>
