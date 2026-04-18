@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "description": "A free, open-source JavaScript/TypeScript playground for your desktop",
   "main": "./out/main/main.js",
-  "author": "Yosef-Adel",
+  "author": {
+    "name": "Yosef-Adel",
+    "email": "yosefadel002@gmail.com"
+  },
   "license": "MIT",
   "scripts": {
     "dev": "electron-vite dev",
