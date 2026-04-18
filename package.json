@@ -8,6 +8,24 @@
     "email": "yosefadel002@gmail.com"
   },
   "license": "MIT",
+  "build": {
+    "appId": "com.yosefadel.runlet",
+    "productName": "Runlet",
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "icon": "build/icon.icns",
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "icon": "build/icons",
+      "category": "Development"
+    }
+  },
   "scripts": {
     "dev": "electron-vite dev",
     "dev:main": "electron-vite dev --mode main",

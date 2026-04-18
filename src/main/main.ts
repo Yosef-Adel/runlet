@@ -13,12 +13,16 @@ function createApplicationMenu(): void {
   const isMac = process.platform === 'darwin';
 
   const template: Electron.MenuItemConstructorOptions[] = [
+    // macOS app menu — required for proper system integration
     ...(isMac
       ? [
           {
             label: app.name,
             submenu: [
-              { role: 'about' as const },
+              {
+                label: `About ${app.name}`,
+                role: 'about' as const,
+              },
               { type: 'separator' as const },
               { role: 'services' as const },
               { type: 'separator' as const },
@@ -26,7 +30,11 @@ function createApplicationMenu(): void {
               { role: 'hideOthers' as const },
               { role: 'unhide' as const },
               { type: 'separator' as const },
-              { role: 'quit' as const },
+              {
+                label: `Quit ${app.name}`,
+                accelerator: 'Cmd+Q',
+                role: 'quit' as const,
+              },
             ],
           },
         ]
@@ -45,19 +53,27 @@ function createApplicationMenu(): void {
           click: () => mainWindow?.webContents.send('menu:close-tab'),
         },
         { type: 'separator' },
-        isMac ? { role: 'close' } : { role: 'quit' },
+        ...(isMac
+          ? []
+          : [
+              {
+                label: 'Quit',
+                accelerator: 'Alt+F4',
+                click: () => app.quit(),
+              },
+            ]),
       ],
     },
     {
       label: 'Edit',
       submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        { role: 'selectAll' },
+        { role: 'undo' as const },
+        { role: 'redo' as const },
+        { type: 'separator' as const },
+        { role: 'cut' as const },
+        { role: 'copy' as const },
+        { role: 'paste' as const },
+        { role: 'selectAll' as const },
       ],
     },
     {
@@ -67,18 +83,19 @@ function createApplicationMenu(): void {
           ? []
           : [
               { role: 'reload' as const },
+              { role: 'forceReload' as const },
               { role: 'toggleDevTools' as const },
               { type: 'separator' as const },
             ]),
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' },
+        { role: 'resetZoom' as const },
+        { role: 'zoomIn' as const },
+        { role: 'zoomOut' as const },
+        { type: 'separator' as const },
+        { role: 'togglefullscreen' as const },
       ],
     },
     {
-      label: 'Action',
+      label: 'Run',
       submenu: [
         {
           label: 'Run Code',
@@ -96,9 +113,18 @@ function createApplicationMenu(): void {
       label: 'Help',
       submenu: [
         {
-          label: 'GitHub Repository',
-          click: () => shell.openExternal('https://github.com/nicepkg/runlet'),
+          label: 'View on GitHub',
+          click: () => shell.openExternal('https://github.com/Yosef-Adel/runlet'),
         },
+        { type: 'separator' as const },
+        ...(!isMac
+          ? [
+              {
+                label: `About ${app.name}`,
+                click: () => app.showAboutPanel(),
+              },
+            ]
+          : []),
       ],
     },
   ];

@@ -1,0 +1,65 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <title>Runlet app icon v2</title>
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="140%" y2="140%">
+      <stop offset="0%" stop-color="#0d0d0d"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+    <linearGradient id="bolt" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#c8c8c8"/>
+    </linearGradient>
+    <linearGradient id="streak1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f7df1e" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#f7df1e" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="streak2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f7df1e" stop-opacity="0"/>
+      <stop offset="60%" stop-color="#f7df1e" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="streak3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f7df1e" stop-opacity="0"/>
+      <stop offset="40%" stop-color="#f7df1e" stop-opacity="0.35"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="110" fill="url(#bg2)"/>
+
+  <!-- Speed streaks coming from left — motion lines -->
+  <rect x="48"  y="196" width="148" height="6"  rx="3" fill="url(#streak1)"/>
+  <rect x="48"  y="218" width="108" height="4"  rx="2" fill="url(#streak2)"/>
+  <rect x="48"  y="236" width="76"  height="3"  rx="1.5" fill="url(#streak3)"/>
+
+  <rect x="48"  y="276" width="148" height="6"  rx="3" fill="url(#streak1)"/>
+  <rect x="48"  y="294" width="108" height="4"  rx="2" fill="url(#streak2)"/>
+  <rect x="48"  y="310" width="76"  height="3"  rx="1.5" fill="url(#streak3)"/>
+
+  <!-- Lightning bolt — the main mark -->
+  <!-- Bold angular bolt shape, slightly right of center -->
+  <polygon
+    points="310,72  218,268  278,268  202,440  390,216  322,216"
+    fill="url(#bolt)"
+  />
+
+  <!-- JS yellow thin outline echo — gives depth -->
+  <polygon
+    points="310,72  218,268  278,268  202,440  390,216  322,216"
+    fill="none"
+    stroke="#f7df1e"
+    stroke-width="2.5"
+    stroke-opacity="0.22"
+  />
+
+  <!-- Bottom wordmark -->
+  <text
+    x="256" y="482"
+    font-family="'SF Mono', 'Courier New', monospace"
+    font-size="38"
+    font-weight="700"
+    fill="#f7df1e"
+    text-anchor="middle"
+    letter-spacing="8"
+    opacity="0.85"
+  >runlet</text>
+</svg>
