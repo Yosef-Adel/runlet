@@ -39,7 +39,7 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      # Cache Electron binary — downloaded separately by electron's install.js, not by npm
+      # Cache Electron binary (fetched by electron's install.js, not npm)
       - name: Cache Electron binary (macOS / Linux)
         if: runner.os != 'Windows'
         uses: actions/cache@v4
@@ -58,6 +58,25 @@ jobs:
           key: electron-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           restore-keys: electron-${{ runner.os }}-
 
+      # Cache electron-builder tools (NSIS, winCodeSign, etc.)
+      - name: Cache electron-builder tools (macOS / Linux)
+        if: runner.os != 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron-builder
+            ~/Library/Caches/electron-builder
+          key: electron-builder-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: electron-builder-${{ runner.os }}-
+
+      - name: Cache electron-builder tools (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.LOCALAPPDATA }}\electron-builder\Cache
+          key: electron-builder-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: electron-builder-${{ runner.os }}-
+
       # Linux dependencies for Electron
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
@@ -65,8 +84,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rpm dpkg fakeroot libx11-dev libxkbfile-dev
 
-      # Install dependencies — retry up to 3 times to survive transient 504s from
-      # GitHub releases (Electron binary download is not controlled by npm retry config)
+      # Install dependencies with retry — Electron binary download uses got directly,
+      # not npm's HTTP client, so npm retry config vars have no effect on it
       - name: Install dependencies
         shell: bash
         run: |
@@ -82,24 +101,49 @@ jobs:
       - name: Build app
         run: npm run build
 
-      # Package for each platform
+      # Package for each platform — all wrapped in retry loops since electron-builder
+      # downloads its own tools (NSIS, winCodeSign) from GitHub releases with no retry
       - name: Package (Linux)
         if: matrix.platform == 'linux'
-        run: npx electron-builder --linux --x64 --publish never
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            npx electron-builder --linux --x64 --publish never && break
+            echo "Attempt $attempt failed — retrying in 20s..."
+            sleep 20
+          done
 
       - name: Package (Windows)
         if: matrix.platform == 'win32'
-        run: npx electron-builder --win --x64 --publish never
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            npx electron-builder --win --x64 --publish never && break
+            echo "Attempt $attempt failed — retrying in 20s..."
+            sleep 20
+          done
 
-      - name: Package (macOS)
+      - name: Package (macOS x64)
         if: matrix.platform == 'darwin' && matrix.arch == 'x64'
-        run: npx electron-builder --mac --x64 --publish never
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            npx electron-builder --mac --x64 --publish never && break
+            echo "Attempt $attempt failed — retrying in 20s..."
+            sleep 20
+          done
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - name: Package (macOS arm64)
         if: matrix.platform == 'darwin' && matrix.arch == 'arm64'
-        run: npx electron-builder --mac --arm64 --publish never
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            npx electron-builder --mac --arm64 --publish never && break
+            echo "Attempt $attempt failed — retrying in 20s..."
+            sleep 20
+          done
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
