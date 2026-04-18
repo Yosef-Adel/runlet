@@ -52,8 +52,18 @@ export function transformCode(code: string, options: TransformOptions): string {
         return;
       }
 
-      // For console.* calls, inject line number via __CONSOLE_LINE__ instead of wrapping
+      // Skip __RESULTS__.push(...) calls inserted by VariableDeclaration handler
       const expr = path.node.expression;
+      if (
+        t.isCallExpression(expr) &&
+        t.isMemberExpression(expr.callee) &&
+        t.isIdentifier(expr.callee.object) &&
+        expr.callee.object.name === RESULTS_VAR
+      ) {
+        return;
+      }
+
+      // For console.* calls, inject line number via __CONSOLE_LINE__ instead of wrapping
       if (
         t.isCallExpression(expr) &&
         t.isMemberExpression(expr.callee) &&
