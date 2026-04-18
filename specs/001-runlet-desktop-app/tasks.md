@@ -150,11 +150,11 @@
 
 ### Implementation for User Story 6
 
-- [ ] T045 [P] [US6] Implement snippets-load, snippets-save, snippets-export, snippets-import IPC handlers using storage service and native file dialogs in src/main/ipc/snippets.ts
-- [ ] T046 [US6] Create Snippets panel UI with snippet list, create/edit/delete forms (name, description, body), insert buttons, and import/export buttons in src/renderer/components/Snippets/Snippets.tsx
-- [ ] T047 [US6] Register snippets as Monaco completion items for autocomplete insertion in src/renderer/components/Editor.tsx
-- [ ] T048 [US6] Add "Create Snippet from Selection" to editor context menu in src/renderer/components/Editor.tsx
-- [ ] T049 [US6] Wire Snippets panel to activity bar toggle in src/renderer/components/ActivityBar.tsx
+- [x] T045 [P] [US6] Implement snippets-load, snippets-save, snippets-export, snippets-import IPC handlers using storage service and native file dialogs in src/main/ipc/snippets.ts
+- [x] T046 [US6] Create Snippets panel UI with snippet list, create/edit/delete forms (name, description, body), insert buttons, and import/export buttons in src/renderer/components/Snippets/Snippets.tsx
+- [x] T047 [US6] Register snippets as Monaco completion items for autocomplete insertion in src/renderer/components/Editor.tsx
+- [x] T048 [US6] Add "Create Snippet from Selection" to editor context menu in src/renderer/components/Editor.tsx
+- [x] T049 [US6] Wire Snippets panel to activity bar toggle in src/renderer/components/ActivityBar.tsx
 
 **Checkpoint**: Snippets CRUD works. Autocomplete inserts snippets. Import/export as JSON works.
 

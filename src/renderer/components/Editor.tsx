@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import * as monaco from 'monaco-editor';
+import type { Snippet } from '../../shared/types';
 
 // Configure Monaco workers for electron-vite
 self.MonacoEnvironment = {
@@ -88,6 +89,8 @@ export interface EditorProps {
   autocomplete?: boolean;
   hover?: boolean;
   signatures?: boolean;
+  snippets?: Snippet[];
+  onCreateSnippet?: (code: string) => void;
 }
 
 export default function Editor({
@@ -105,6 +108,8 @@ export default function Editor({
   autocomplete = true,
   hover = true,
   signatures = true,
+  snippets = [],
+  onCreateSnippet,
 }: EditorProps): React.ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -144,6 +149,25 @@ export default function Editor({
       }
     });
 
+    // Add "Create Snippet from Selection" context menu action
+    if (onCreateSnippet) {
+      editor.addAction({
+        id: 'create-snippet-from-selection',
+        label: 'Create Snippet from Selection',
+        contextMenuGroupId: '9_cutcopypaste',
+        contextMenuOrder: 10,
+        run: (ed) => {
+          const selection = ed.getSelection();
+          if (selection) {
+            const selectedText = ed.getModel()?.getValueInRange(selection);
+            if (selectedText) {
+              onCreateSnippet(selectedText);
+            }
+          }
+        },
+      });
+    }
+
     editorRef.current = editor;
 
     return () => {
@@ -174,6 +198,42 @@ export default function Editor({
       }
     }
   }, [language]);
+
+  // Register snippet completion provider
+  const completionDisposableRef = useRef<monaco.IDisposable | null>(null);
+  useEffect(() => {
+    completionDisposableRef.current?.dispose();
+    if (snippets.length === 0) return;
+
+    completionDisposableRef.current = monaco.languages.registerCompletionItemProvider(
+      language,
+      {
+        provideCompletionItems: (model, position) => {
+          const word = model.getWordUntilPosition(position);
+          const range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn,
+          };
+          return {
+            suggestions: snippets.map((s) => ({
+              label: s.name,
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: s.description,
+              insertText: s.body,
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              range,
+            })),
+          };
+        },
+      }
+    );
+
+    return () => {
+      completionDisposableRef.current?.dispose();
+    };
+  }, [snippets, language]);
 
   // Update options
   useEffect(() => {

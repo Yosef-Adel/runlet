@@ -9,6 +9,7 @@ import Divider from './components/Divider';
 import TabBar from './components/TabBar';
 import ActivityBar from './components/ActivityBar';
 import NpmPackages from './components/NpmPackages/NpmPackages';
+import Snippets from './components/Snippets/Snippets';
 
 export default function App(): React.ReactElement {
   const outputVisible = useAppStore((s) => s.outputVisible);
@@ -16,6 +17,7 @@ export default function App(): React.ReactElement {
   const updateTabContent = useAppStore((s) => s.updateTabContent);
   const activePanel = useAppStore((s) => s.activePanel);
   const setActivePanel = useAppStore((s) => s.setActivePanel);
+  const snippets = useAppStore((s) => s.snippets);
 
   const { tabs, activeTabId, addTab, closeTab, setActiveTab, updateTabTitle } = useTabs();
   const { settings } = useSettings();
@@ -79,9 +81,7 @@ export default function App(): React.ReactElement {
           {activePanel === 'settings' && (
             <div style={{ padding: 12, color: '#969696', fontSize: 13 }}>Settings panel (Phase 9)</div>
           )}
-          {activePanel === 'snippets' && (
-            <div style={{ padding: 12, color: '#969696', fontSize: 13 }}>Snippets panel (Phase 8)</div>
-          )}
+          {activePanel === 'snippets' && <Snippets />}
           {activePanel === 'env-vars' && (
             <div style={{ padding: 12, color: '#969696', fontSize: 13 }}>Env vars panel (Phase 13)</div>
           )}
@@ -125,6 +125,7 @@ export default function App(): React.ReactElement {
                 autocomplete={settings.general.autocomplete}
                 hover={settings.general.hoverInfo}
                 signatures={settings.general.signatures}
+                snippets={snippets}
               />
             )}
           </div>
