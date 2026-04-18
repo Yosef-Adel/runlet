@@ -36,7 +36,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       # Linux dependencies for Electron
@@ -66,10 +66,14 @@ jobs:
       - name: Package (macOS)
         if: matrix.platform == 'darwin' && matrix.arch == 'x64'
         run: npx electron-builder --mac --x64 --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - name: Package (macOS arm64)
         if: matrix.platform == 'darwin' && matrix.arch == 'arm64'
         run: npx electron-builder --mac --arm64 --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
 
       # Upload artifacts
       - name: Upload artifacts
