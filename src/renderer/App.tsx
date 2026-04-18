@@ -7,6 +7,7 @@ import Editor from './components/Editor';
 import Output from './components/Output';
 import Divider from './components/Divider';
 import TabBar from './components/TabBar';
+import TitleBar from './components/TitleBar';
 import ActivityBar from './components/ActivityBar';
 import NpmPackages from './components/NpmPackages/NpmPackages';
 import Snippets from './components/Snippets/Snippets';
@@ -126,6 +127,9 @@ export default function App(): React.ReactElement {
 
       {/* Main Content */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {/* Title Bar */}
+        <TitleBar />
+
         {/* Tab Bar */}
         <TabBar
           tabs={tabs}

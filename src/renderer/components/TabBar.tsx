@@ -100,8 +100,6 @@ export default function TabBar({
     [finishEditing]
   );
 
-  const isMac = navigator.userAgent.includes('Macintosh');
-
   return (
     <div
       style={{
@@ -115,17 +113,6 @@ export default function TabBar({
       }}
       onClick={() => setContextMenu(null)}
     >
-      {/* Traffic light spacer on macOS — keeps tabs clear of window buttons */}
-      {isMac && (
-        <div
-          style={{
-            width: 76,
-            flexShrink: 0,
-            WebkitAppRegion: 'drag' as unknown as string,
-          }}
-        />
-      )}
-
       <div
         style={{
           display: 'flex',

@@ -145,7 +145,7 @@ function createWindow(): void {
       nodeIntegration: false,
     },
     titleBarStyle: 'hiddenInset',
-    trafficLightPosition: { x: 12, y: 12 },
+    trafficLightPosition: { x: 12, y: 7 },
     show: false,
   });
 

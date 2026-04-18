@@ -75,6 +75,7 @@
 
   /* Activity bar */
   --activity-bar-width: 48px;
+  --title-bar-height: 28px;
   --tab-bar-height: 38px;
 }
 
