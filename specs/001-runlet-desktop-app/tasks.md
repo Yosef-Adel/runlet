@@ -300,12 +300,12 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T082 [P] Add application menu (File, Edit, View, Action, Tools, Help) with keyboard shortcuts for common actions in src/main/main.ts
-- [ ] T083 [P] Implement session restore — reopen last-used tabs and settings on app launch in src/main/main.ts
-- [ ] T084 Handle large output gracefully — truncate or virtualize output results exceeding a threshold in src/renderer/components/Output.tsx
-- [ ] T085 Add error boundaries to React component tree to prevent full-app crashes in src/renderer/App.tsx
-- [ ] T086 [P] Add JSX syntax transformation support in the execution pipeline (esbuild jsx option + Babel) in src/main/executor/runner.ts
-- [ ] T087 Run quickstart.md validation — verify npm run dev, npm run build, and npm run package work correctly
+- [x] T082 [P] Add application menu (File, Edit, View, Action, Tools, Help) with keyboard shortcuts for common actions in src/main/main.ts
+- [x] T083 [P] Implement session restore — reopen last-used tabs and settings on app launch in src/main/main.ts
+- [x] T084 Handle large output gracefully — truncate or virtualize output results exceeding a threshold in src/renderer/components/Output.tsx
+- [x] T085 Add error boundaries to React component tree to prevent full-app crashes in src/renderer/App.tsx
+- [x] T086 [P] Add JSX syntax transformation support in the execution pipeline (esbuild jsx option + Babel) in src/main/executor/runner.ts
+- [x] T087 Run quickstart.md validation — verify npm run dev, npm run build, and npm run package work correctly
 
 ---
 

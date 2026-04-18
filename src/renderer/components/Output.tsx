@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import type { OutputResult, ConsoleEntry } from '../../shared/types';
+import { MAX_OUTPUT_LINES } from '../../shared/constants';
 
 export interface OutputProps {
   results: OutputResult[];
@@ -60,9 +61,15 @@ export default function Output({
     ? results
     : results.filter((r) => r.type !== 'undefined' || r.isError || r.isMagic);
 
+  const truncated = filteredResults.length > MAX_OUTPUT_LINES;
+  const displayResults = truncated ? filteredResults.slice(0, MAX_OUTPUT_LINES) : filteredResults;
+  const truncatedConsole = consoleOutput.length > MAX_OUTPUT_LINES
+    ? consoleOutput.slice(0, MAX_OUTPUT_LINES)
+    : consoleOutput;
+
   // Build line-aligned output if matchLines is on
   const renderLineAligned = () => {
-    if (filteredResults.length === 0 && consoleOutput.length === 0 && !error) {
+    if (displayResults.length === 0 && truncatedConsole.length === 0 && !error) {
       return (
         <div style={{ padding: 16, color: '#6a737d', fontStyle: 'italic' }}>
           No output
@@ -72,22 +79,22 @@ export default function Output({
 
     // Group results by line
     const lineMap = new Map<number, OutputResult[]>();
-    for (const r of filteredResults) {
+    for (const r of displayResults) {
       const existing = lineMap.get(r.line) ?? [];
       existing.push(r);
       lineMap.set(r.line, existing);
     }
 
     const maxLine = Math.max(
-      ...filteredResults.map((r) => r.line),
-      ...consoleOutput.map((c) => c.line ?? 0),
+      ...displayResults.map((r) => r.line),
+      ...truncatedConsole.map((c) => c.line ?? 0),
       0
     );
 
     const lines: React.ReactElement[] = [];
     for (let i = 1; i <= maxLine; i++) {
       const lineResults = lineMap.get(i);
-      const lineConsole = consoleOutput.filter((c) => c.line === i);
+      const lineConsole = truncatedConsole.filter((c) => c.line === i);
 
       lines.push(
         <div
@@ -129,13 +136,21 @@ export default function Output({
       );
     }
 
+    if (truncated) {
+      lines.push(
+        <div key="truncated" style={{ padding: '8px 12px', color: '#cca700', fontStyle: 'italic' }}>
+          Output truncated to {MAX_OUTPUT_LINES} lines
+        </div>
+      );
+    }
+
     return lines;
   };
 
   const renderFlat = () => {
     const items: React.ReactElement[] = [];
 
-    for (const [idx, r] of filteredResults.entries()) {
+    for (const [idx, r] of displayResults.entries()) {
       items.push(
         <div
           key={`result-${idx}`}
@@ -151,7 +166,7 @@ export default function Output({
       );
     }
 
-    for (const [idx, c] of consoleOutput.entries()) {
+    for (const [idx, c] of truncatedConsole.entries()) {
       items.push(
         <div
           key={`console-${idx}`}
