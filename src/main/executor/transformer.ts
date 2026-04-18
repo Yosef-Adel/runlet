@@ -1,7 +1,11 @@
 import { parse } from '@babel/parser';
-import traverse from '@babel/traverse';
-import generate from '@babel/generator';
+import _traverse from '@babel/traverse';
+import _generate from '@babel/generator';
 import * as t from '@babel/types';
+
+// Handle ESM/CJS interop — these modules export { default } when consumed as CJS
+const traverse = (typeof _traverse === 'function' ? _traverse : (_traverse as any).default) as typeof _traverse;
+const generate = (typeof _generate === 'function' ? _generate : (_generate as any).default) as typeof _generate;
 
 export interface TransformOptions {
   loopProtection: boolean;
