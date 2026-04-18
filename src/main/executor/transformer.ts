@@ -145,5 +145,37 @@ export function transformCode(code: string, options: TransformOptions): string {
   });
 
   const output = generate(ast, { retainLines: true });
-  return output.code;
+
+  // Second pass: handle magic comments /*?*/
+  // Find /*?*/ in comments and instrument the preceding expression
+  let result = output.code;
+  const magicRegex = /\/\*\?\*\//g;
+  let match: RegExpExecArray | null;
+  const magicInserts: { index: number; line: number }[] = [];
+
+  // Work on the source to find magic comment positions
+  const lines = code.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const lineStr = lines[i];
+    if (lineStr.includes('/*?*/')) {
+      magicInserts.push({ index: i, line: i + 1 });
+    }
+  }
+
+  // For each magic comment, inject a result capture after the line in the transformed code
+  if (magicInserts.length > 0) {
+    const transformedLines = result.split('\n');
+    // Process in reverse so line indices don't shift
+    for (let i = magicInserts.length - 1; i >= 0; i--) {
+      const { line } = magicInserts[i];
+      // Find the corresponding line in transformed code and add a magic result capture
+      // We insert after the line that contains the magic comment
+      const insertIdx = Math.min(line, transformedLines.length);
+      const captureCode = `${RESULTS_VAR}.push({ line: ${line}, value: (() => { try { return eval(${JSON.stringify(lines[line - 1].replace('/*?*/', '').trim())}); } catch(e) { return e.message; } })(), type: 'magic', isMagic: true });`;
+      transformedLines.splice(insertIdx, 0, captureCode);
+    }
+    result = transformedLines.join('\n');
+  }
+
+  return result;
 }

@@ -186,9 +186,9 @@
 
 ### Implementation for User Story 8
 
-- [ ] T055 [US8] Extend Babel AST transformer to detect `/*?*/` comment markers, find preceding expression, instrument it to capture value with isMagic flag in src/main/executor/transformer.ts
-- [ ] T056 [US8] Render magic comment results as inline decorations in the editor (distinct from output pane results) in src/renderer/components/Editor.tsx
-- [ ] T057 [US8] Render magic comment results in the output pane with visual distinction (e.g., different styling) in src/renderer/components/Output.tsx
+- [x] T055 [US8] Extend Babel AST transformer to detect `/*?*/` comment markers, find preceding expression, instrument it to capture value with isMagic flag in src/main/executor/transformer.ts
+- [x] T056 [US8] Render magic comment results as inline decorations in the editor (distinct from output pane results) in src/renderer/components/Editor.tsx
+- [x] T057 [US8] Render magic comment results in the output pane with visual distinction (e.g., different styling) in src/renderer/components/Output.tsx
 
 **Checkpoint**: Magic comments display inline values for annotated expressions.
 

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import * as monaco from 'monaco-editor';
-import type { Snippet } from '../../shared/types';
+import type { Snippet, OutputResult } from '../../shared/types';
 
 // Configure Monaco workers for electron-vite
 self.MonacoEnvironment = {
@@ -91,6 +91,7 @@ export interface EditorProps {
   signatures?: boolean;
   snippets?: Snippet[];
   onCreateSnippet?: (code: string) => void;
+  magicResults?: OutputResult[];
 }
 
 export default function Editor({
@@ -110,6 +111,7 @@ export default function Editor({
   signatures = true,
   snippets = [],
   onCreateSnippet,
+  magicResults = [],
 }: EditorProps): React.ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -255,6 +257,32 @@ export default function Editor({
   useEffect(() => {
     monaco.editor.setTheme(theme);
   }, [theme]);
+
+  // Render magic comment results as inline decorations
+  const decorationsRef = useRef<string[]>([]);
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    const magicItems = magicResults.filter((r) => r.isMagic);
+    if (magicItems.length === 0) {
+      decorationsRef.current = editor.deltaDecorations(decorationsRef.current, []);
+      return;
+    }
+
+    const decorations: monaco.editor.IModelDeltaDecoration[] = magicItems.map((r) => ({
+      range: new monaco.Range(r.line, 1, r.line, 1),
+      options: {
+        after: {
+          content: ` => ${r.displayValue}`,
+          inlineClassName: 'magic-comment-decoration',
+        },
+        isWholeLine: true,
+      },
+    }));
+
+    decorationsRef.current = editor.deltaDecorations(decorationsRef.current, decorations);
+  }, [magicResults]);
 
   return (
     <div

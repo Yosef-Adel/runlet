@@ -130,6 +130,7 @@ export default function App(): React.ReactElement {
                 signatures={settings.general.signatures}
                 snippets={snippets}
                 theme={getMonacoThemeId(settings.appearance.theme)}
+                magicResults={activeTab?.output}
               />
             )}
           </div>
