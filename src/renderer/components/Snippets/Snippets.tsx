@@ -99,100 +99,135 @@ export default function Snippets(): React.ReactElement {
     }
   }, [snippets, save]);
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    background: '#3c3c3c',
-    border: '1px solid #555',
-    color: '#d4d4d4',
-    padding: '4px 8px',
-    fontSize: 13,
-    outline: 'none',
-    borderRadius: 3,
-    marginBottom: 4,
+  const smallBtnStyle: React.CSSProperties = {
+    padding: '4px 10px',
+    borderRadius: 'var(--radius-full)',
+    fontSize: 'var(--text-xs)',
+    fontWeight: 500,
+    transition: 'all var(--transition-fast)',
+    border: '1px solid var(--border-default)',
+    color: 'var(--text-secondary)',
+    background: 'transparent',
   };
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <div style={{ padding: '8px 12px', borderBottom: '1px solid #3c3c3c' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-          <span style={{ fontSize: 11, textTransform: 'uppercase', color: '#969696' }}>Snippets</span>
-          <div style={{ display: 'flex', gap: 4 }}>
-            <button onClick={handleImport} style={{ background: 'transparent', border: '1px solid #555', color: '#969696', padding: '2px 6px', borderRadius: 3, cursor: 'pointer', fontSize: 11 }}>
-              Import
-            </button>
-            <button onClick={handleExport} style={{ background: 'transparent', border: '1px solid #555', color: '#969696', padding: '2px 6px', borderRadius: 3, cursor: 'pointer', fontSize: 11 }}>
-              Export
-            </button>
+      {/* Header */}
+      <div style={{ padding: 'var(--space-md) var(--space-lg)', borderBottom: '1px solid var(--border-subtle)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-sm)' }}>
+          <span style={{ fontSize: 'var(--text-xs)', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em', fontWeight: 600 }}>
+            Snippets
+          </span>
+          <div style={{ display: 'flex', gap: 'var(--space-xs)' }}>
+            <button onClick={handleImport} style={smallBtnStyle}>Import</button>
+            <button onClick={handleExport} style={smallBtnStyle}>Export</button>
           </div>
         </div>
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" style={inputStyle} />
-        <input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" style={inputStyle} />
-        <textarea
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          placeholder="Code body..."
-          rows={3}
-          style={{ ...inputStyle, resize: 'vertical', fontFamily: 'monospace' }}
-        />
-        <button
-          onClick={editing ? handleUpdate : handleCreate}
-          disabled={!name.trim() || !body.trim()}
-          style={{
-            width: '100%',
-            background: '#0e639c',
-            border: 'none',
-            color: '#fff',
-            padding: '4px 8px',
-            borderRadius: 3,
-            cursor: 'pointer',
-            fontSize: 12,
-          }}
-        >
-          {editing ? 'Update' : 'Create'}
-        </button>
-        {editing && (
-          <button
-            onClick={() => { setEditing(null); setName(''); setDescription(''); setBody(''); }}
-            style={{
-              width: '100%',
-              background: 'transparent',
-              border: '1px solid #555',
-              color: '#969696',
-              padding: '4px 8px',
-              borderRadius: 3,
-              cursor: 'pointer',
-              fontSize: 12,
-              marginTop: 4,
-            }}
-          >
-            Cancel
-          </button>
-        )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xs)' }}>
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Snippet name" style={{ width: '100%' }} />
+          <input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description (optional)" style={{ width: '100%' }} />
+          <textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Code body..."
+            rows={3}
+            style={{ width: '100%' }}
+          />
+          <div style={{ display: 'flex', gap: 'var(--space-xs)' }}>
+            <button
+              onClick={editing ? handleUpdate : handleCreate}
+              disabled={!name.trim() || !body.trim()}
+              style={{
+                flex: 1,
+                background: 'var(--accent)',
+                color: '#fff',
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 500,
+                transition: 'background var(--transition-fast)',
+              }}
+              onMouseEnter={(e) => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'var(--accent-hover)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent)'; }}
+            >
+              {editing ? 'Update' : 'Create'}
+            </button>
+            {editing && (
+              <button
+                onClick={() => { setEditing(null); setName(''); setDescription(''); setBody(''); }}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: 'var(--text-sm)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-secondary)',
+                }}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
+      {/* Snippet list */}
       <div style={{ flex: 1, overflow: 'auto' }}>
         {snippets.length === 0 ? (
-          <div style={{ padding: 12, color: '#6a737d', fontSize: 12, fontStyle: 'italic' }}>
+          <div style={{
+            padding: 'var(--space-xl)',
+            color: 'var(--text-muted)',
+            fontSize: 'var(--text-sm)',
+            fontStyle: 'italic',
+            textAlign: 'center',
+          }}>
             No snippets yet
           </div>
         ) : (
           snippets.map((s) => (
-            <div key={s.id} style={{ padding: '6px 12px', borderBottom: '1px solid #2a2a2a', fontSize: 13 }}>
+            <div
+              key={s.id}
+              style={{
+                padding: 'var(--space-sm) var(--space-lg)',
+                borderBottom: '1px solid var(--border-subtle)',
+                transition: 'background var(--transition-fast)',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--border-subtle)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+            >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: '#4ec9b0' }}>{s.name}</span>
-                <div style={{ display: 'flex', gap: 4 }}>
-                  <button onClick={() => handleInsert(s)} style={{ background: 'transparent', border: 'none', color: '#0e639c', cursor: 'pointer', fontSize: 11 }}>
+                <span style={{ color: 'var(--syntax-type)', fontWeight: 500 }}>{s.name}</span>
+                <div style={{ display: 'flex', gap: 'var(--space-xs)' }}>
+                  <button
+                    onClick={() => handleInsert(s)}
+                    style={{ color: 'var(--accent)', fontSize: 'var(--text-xs)', fontWeight: 500, transition: 'opacity var(--transition-fast)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.7'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
+                  >
                     Insert
                   </button>
-                  <button onClick={() => handleEdit(s)} style={{ background: 'transparent', border: 'none', color: '#969696', cursor: 'pointer', fontSize: 11 }}>
+                  <button
+                    onClick={() => handleEdit(s)}
+                    style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)', transition: 'color var(--transition-fast)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; }}
+                  >
                     Edit
                   </button>
-                  <button onClick={() => handleDelete(s.id)} style={{ background: 'transparent', border: 'none', color: '#f44747', cursor: 'pointer', fontSize: 11 }}>
+                  <button
+                    onClick={() => handleDelete(s.id)}
+                    style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)', transition: 'color var(--transition-fast)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--error)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; }}
+                  >
                     Delete
                   </button>
                 </div>
               </div>
-              {s.description && <div style={{ color: '#6a737d', fontSize: 12, marginTop: 2 }}>{s.description}</div>}
+              {s.description && (
+                <div style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-xs)', marginTop: 2, lineHeight: 1.4 }}>
+                  {s.description}
+                </div>
+              )}
             </div>
           ))
         )}

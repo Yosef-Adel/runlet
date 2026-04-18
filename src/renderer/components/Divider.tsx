@@ -45,13 +45,23 @@ export default function Divider({ direction, onResize }: DividerProps): React.Re
     <div
       onMouseDown={handleMouseDown}
       style={{
-        width: direction === 'horizontal' ? 4 : '100%',
-        height: direction === 'horizontal' ? '100%' : 4,
-        backgroundColor: isDragging ? '#007acc' : '#3c3c3c',
+        width: direction === 'horizontal' ? 1 : '100%',
+        height: direction === 'horizontal' ? '100%' : 1,
+        backgroundColor: isDragging ? 'var(--accent)' : 'var(--border-subtle)',
         cursor: direction === 'horizontal' ? 'col-resize' : 'row-resize',
         flexShrink: 0,
-        transition: 'background-color 0.1s',
+        transition: isDragging ? 'none' : 'background-color var(--transition-base)',
+        position: 'relative',
       }}
-    />
+    >
+      {/* Invisible wider hit area */}
+      <div style={{
+        position: 'absolute',
+        [direction === 'horizontal' ? 'left' : 'top']: -3,
+        [direction === 'horizontal' ? 'width' : 'height']: 7,
+        [direction === 'horizontal' ? 'height' : 'width']: '100%',
+        cursor: direction === 'horizontal' ? 'col-resize' : 'row-resize',
+      }} />
+    </div>
   );
 }

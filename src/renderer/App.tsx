@@ -84,7 +84,7 @@ export default function App(): React.ReactElement {
   const flexDirection = isHorizontal ? 'row' as const : 'column' as const;
 
   return (
-    <div style={{ display: 'flex', height: '100%', width: '100%' }}>
+    <div style={{ display: 'flex', height: '100%', width: '100%', background: 'var(--bg-base)' }}>
       {/* Activity Bar */}
       <ActivityBar
         activePanel={activePanel}
@@ -100,8 +100,8 @@ export default function App(): React.ReactElement {
         <div
           style={{
             width: 300,
-            background: '#252526',
-            borderRight: '1px solid #3c3c3c',
+            background: 'var(--bg-surface)',
+            borderRight: '1px solid var(--border-subtle)',
             overflow: 'hidden',
           }}
         >

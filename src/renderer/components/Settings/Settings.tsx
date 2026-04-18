@@ -9,38 +9,28 @@ export default function SettingsPanel(): React.ReactElement {
   const { settings, updateSettings } = useSettings();
   const [activeTab, setActiveTab] = useState<SettingsTab>('general');
 
-  const tabStyle = (tab: SettingsTab): React.CSSProperties => ({
-    padding: '6px 12px',
-    background: activeTab === tab ? '#1e1e1e' : 'transparent',
-    color: activeTab === tab ? '#fff' : '#969696',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: 12,
-    borderBottom: activeTab === tab ? '2px solid #007acc' : '2px solid transparent',
-  });
-
   const labelStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '6px 0',
-    fontSize: 13,
-    color: '#d4d4d4',
+    padding: '8px 0',
+    fontSize: 'var(--text-base)',
+    color: 'var(--text-primary)',
+    borderBottom: '1px solid var(--border-subtle)',
   };
 
   const selectStyle: React.CSSProperties = {
-    background: '#3c3c3c',
-    border: '1px solid #555',
-    color: '#d4d4d4',
-    padding: '3px 6px',
-    fontSize: 13,
-    borderRadius: 3,
-    outline: 'none',
+    background: 'var(--bg-input)',
+    border: '1px solid var(--border-default)',
+    color: 'var(--text-primary)',
+    padding: '4px 8px',
+    fontSize: 'var(--text-sm)',
+    borderRadius: 'var(--radius-md)',
   };
 
   const inputStyle: React.CSSProperties = {
     ...selectStyle,
-    width: 60,
+    width: 64,
     textAlign: 'right' as const,
   };
 
@@ -68,48 +58,90 @@ export default function SettingsPanel(): React.ReactElement {
     <button
       onClick={() => onChange(!checked)}
       style={{
-        width: 36,
-        height: 20,
-        borderRadius: 10,
-        border: 'none',
-        background: checked ? '#0e639c' : '#555',
+        width: 38,
+        height: 22,
+        borderRadius: 'var(--radius-full)',
+        background: checked ? 'var(--accent)' : 'var(--border-strong)',
         cursor: 'pointer',
         position: 'relative',
         padding: 0,
+        transition: 'background var(--transition-base)',
+        flexShrink: 0,
       }}
     >
       <div
         style={{
           width: 16,
           height: 16,
-          borderRadius: 8,
+          borderRadius: 'var(--radius-full)',
           background: '#fff',
           position: 'absolute',
-          top: 2,
-          left: checked ? 18 : 2,
-          transition: 'left 0.15s',
+          top: 3,
+          left: checked ? 19 : 3,
+          transition: 'left var(--transition-base)',
+          boxShadow: 'var(--shadow-sm)',
         }}
       />
     </button>
   );
 
+  const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+    <div style={{
+      fontSize: 'var(--text-xs)',
+      color: 'var(--text-muted)',
+      padding: '12px 0 4px',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em',
+      fontWeight: 600,
+    }}>
+      {children}
+    </div>
+  );
+
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <div style={{ padding: '8px 12px 0', borderBottom: '1px solid #3c3c3c' }}>
-        <div style={{ fontSize: 11, textTransform: 'uppercase', color: '#969696', marginBottom: 6 }}>
+      {/* Header with tabs */}
+      <div style={{ padding: 'var(--space-md) var(--space-lg) 0', borderBottom: '1px solid var(--border-subtle)' }}>
+        <div style={{
+          fontSize: 'var(--text-xs)',
+          textTransform: 'uppercase',
+          color: 'var(--text-muted)',
+          marginBottom: 'var(--space-sm)',
+          letterSpacing: '0.05em',
+          fontWeight: 600,
+        }}>
           Settings
         </div>
         <div style={{ display: 'flex', gap: 0 }}>
           {(['general', 'build', 'formatting', 'appearance', 'advanced'] as SettingsTab[]).map((tab) => (
-            <button key={tab} onClick={() => setActiveTab(tab)} style={tabStyle(tab)}>
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '6px 10px',
+                background: 'transparent',
+                color: activeTab === tab ? 'var(--text-primary)' : 'var(--text-muted)',
+                fontSize: 'var(--text-xs)',
+                borderBottom: activeTab === tab ? '2px solid var(--accent)' : '2px solid transparent',
+                fontWeight: activeTab === tab ? 600 : 400,
+                transition: 'all var(--transition-fast)',
+                textTransform: 'capitalize',
+              }}
+              onMouseEnter={(e) => {
+                if (activeTab !== tab) e.currentTarget.style.color = 'var(--text-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                if (activeTab !== tab) e.currentTarget.style.color = 'var(--text-muted)';
+              }}
+            >
+              {tab}
             </button>
           ))}
         </div>
       </div>
 
-      <div style={{ flex: 1, overflow: 'auto', padding: '8px 12px' }}>
-        {/* General Tab */}
+      {/* Settings content */}
+      <div style={{ flex: 1, overflow: 'auto', padding: 'var(--space-sm) var(--space-lg)' }}>
         {activeTab === 'general' && (
           <div>
             <div style={labelStyle}><span>Auto Run</span><Toggle checked={settings.general.autoRun} onChange={(v) => updateGeneral('autoRun', v)} /></div>
@@ -133,12 +165,11 @@ export default function SettingsPanel(): React.ReactElement {
           </div>
         )}
 
-        {/* Build Tab */}
         {activeTab === 'build' && (
           <div>
             <div style={labelStyle}><span>TypeScript</span><Toggle checked={settings.build.typescript} onChange={(v) => updateBuild('typescript', v)} /></div>
             <div style={labelStyle}><span>JSX</span><Toggle checked={settings.build.jsx} onChange={(v) => updateBuild('jsx', v)} /></div>
-            <div style={{ fontSize: 11, color: '#969696', padding: '8px 0 4px', textTransform: 'uppercase' }}>Proposals</div>
+            <SectionLabel>Proposals</SectionLabel>
             <div style={labelStyle}><span>Pipeline Operator</span><Toggle checked={settings.build.proposalPipeline} onChange={(v) => updateBuild('proposalPipeline', v)} /></div>
             <div style={labelStyle}><span>Decorators</span><Toggle checked={settings.build.proposalDecorators} onChange={(v) => updateBuild('proposalDecorators', v)} /></div>
             <div style={labelStyle}><span>Partial Application</span><Toggle checked={settings.build.proposalPartialApplication} onChange={(v) => updateBuild('proposalPartialApplication', v)} /></div>
@@ -149,7 +180,6 @@ export default function SettingsPanel(): React.ReactElement {
           </div>
         )}
 
-        {/* Formatting Tab */}
         {activeTab === 'formatting' && (
           <div>
             <div style={labelStyle}><span>Auto Format on Run</span><Toggle checked={settings.formatting.autoFormat} onChange={(v) => updateFormatting('autoFormat', v)} /></div>
@@ -171,7 +201,6 @@ export default function SettingsPanel(): React.ReactElement {
           </div>
         )}
 
-        {/* Appearance Tab */}
         {activeTab === 'appearance' && (
           <div>
             <div style={labelStyle}>
@@ -184,7 +213,7 @@ export default function SettingsPanel(): React.ReactElement {
             </div>
             <div style={labelStyle}>
               <span>Font Family</span>
-              <input type="text" value={settings.appearance.fontFamily} onChange={(e) => updateAppearance('fontFamily', e.target.value)} style={{ ...inputStyle, width: 140 }} />
+              <input type="text" value={settings.appearance.fontFamily} onChange={(e) => updateAppearance('fontFamily', e.target.value)} style={{ ...inputStyle, width: 140, textAlign: 'left' as const }} />
             </div>
             <div style={labelStyle}>
               <span>Font Size</span>
@@ -199,7 +228,6 @@ export default function SettingsPanel(): React.ReactElement {
           </div>
         )}
 
-        {/* Advanced Tab */}
         {activeTab === 'advanced' && (
           <div>
             <div style={labelStyle}><span>Expression Results</span><Toggle checked={settings.advanced.expressionResults} onChange={(v) => updateAdvanced('expressionResults', v)} /></div>

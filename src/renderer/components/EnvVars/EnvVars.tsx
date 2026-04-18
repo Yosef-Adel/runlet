@@ -45,57 +45,64 @@ export default function EnvVars(): React.ReactElement {
     [envVars, save]
   );
 
-  const inputStyle: React.CSSProperties = {
-    background: '#3c3c3c',
-    border: '1px solid #555',
-    color: '#d4d4d4',
-    padding: '4px 8px',
-    fontSize: 13,
-    outline: 'none',
-    borderRadius: 3,
-  };
-
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <div style={{ padding: '8px 12px', borderBottom: '1px solid #3c3c3c' }}>
-        <div style={{ fontSize: 11, textTransform: 'uppercase', color: '#969696', marginBottom: 6 }}>
+      {/* Header */}
+      <div style={{ padding: 'var(--space-md) var(--space-lg)', borderBottom: '1px solid var(--border-subtle)' }}>
+        <div style={{
+          fontSize: 'var(--text-xs)',
+          textTransform: 'uppercase',
+          color: 'var(--text-muted)',
+          marginBottom: 'var(--space-sm)',
+          letterSpacing: '0.05em',
+          fontWeight: 600,
+        }}>
           Environment Variables
         </div>
-        <div style={{ display: 'flex', gap: 4, marginBottom: 4 }}>
+        <div style={{ display: 'flex', gap: 'var(--space-xs)', marginBottom: 'var(--space-xs)' }}>
           <input
             value={newKey}
             onChange={(e) => setNewKey(e.target.value)}
             placeholder="KEY"
-            style={{ ...inputStyle, flex: 1 }}
+            style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 'var(--text-sm)', textTransform: 'uppercase' }}
           />
           <input
             value={newValue}
             onChange={(e) => setNewValue(e.target.value)}
             placeholder="Value"
             onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-            style={{ ...inputStyle, flex: 1 }}
+            style={{ flex: 1 }}
           />
           <button
             onClick={handleAdd}
             disabled={!newKey.trim()}
             style={{
-              background: '#0e639c',
-              border: 'none',
+              background: 'var(--accent)',
               color: '#fff',
-              padding: '4px 10px',
-              borderRadius: 3,
-              cursor: 'pointer',
-              fontSize: 12,
+              padding: '6px 12px',
+              borderRadius: 'var(--radius-md)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              transition: 'background var(--transition-fast)',
             }}
+            onMouseEnter={(e) => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'var(--accent-hover)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent)'; }}
           >
             Add
           </button>
         </div>
       </div>
 
+      {/* Variables list */}
       <div style={{ flex: 1, overflow: 'auto' }}>
         {envVars.length === 0 ? (
-          <div style={{ padding: 12, color: '#6a737d', fontSize: 12, fontStyle: 'italic' }}>
+          <div style={{
+            padding: 'var(--space-xl)',
+            color: 'var(--text-muted)',
+            fontSize: 'var(--text-sm)',
+            fontStyle: 'italic',
+            textAlign: 'center',
+          }}>
             No environment variables set
           </div>
         ) : (
@@ -103,32 +110,46 @@ export default function EnvVars(): React.ReactElement {
             <div
               key={v.key}
               style={{
-                padding: '6px 12px',
-                borderBottom: '1px solid #2a2a2a',
+                padding: 'var(--space-sm) var(--space-lg)',
+                borderBottom: '1px solid var(--border-subtle)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 4,
-                fontSize: 13,
+                gap: 'var(--space-sm)',
+                transition: 'background var(--transition-fast)',
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--border-subtle)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
             >
-              <span style={{ color: '#4ec9b0', minWidth: 80, flexShrink: 0 }}>{v.key}</span>
+              <span style={{
+                color: 'var(--syntax-type)',
+                minWidth: 80,
+                flexShrink: 0,
+                fontFamily: 'var(--font-mono)',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 500,
+              }}>
+                {v.key}
+              </span>
               <input
                 value={v.value}
                 onChange={(e) => handleUpdate(v.key, e.target.value)}
-                style={{ ...inputStyle, flex: 1 }}
+                style={{ flex: 1, fontSize: 'var(--text-sm)' }}
               />
               <button
                 onClick={() => handleDelete(v.key)}
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#f44747',
-                  cursor: 'pointer',
-                  fontSize: 14,
-                  padding: '0 4px',
+                  color: 'var(--text-muted)',
+                  padding: '2px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  transition: 'color var(--transition-fast)',
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--error)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; }}
               >
-                ×
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
               </button>
             </div>
           ))
