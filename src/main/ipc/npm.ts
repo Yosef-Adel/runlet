@@ -1,13 +1,51 @@
 import type { IpcMain } from 'electron';
 import { BrowserWindow } from 'electron';
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 import { promisify } from 'util';
+import { existsSync } from 'fs';
 import { IPC_CHANNELS, PACKAGES_FILE } from '../../shared/constants';
 import { searchPackages } from '../services/npm-registry';
 import { loadJson, saveJson, getDataDir, ensurePackagesDir } from '../services/storage';
 import type { InstalledPackage } from '../../shared/types';
 
 const execAsync = promisify(exec);
+
+// In a packaged .app the shell PATH is /usr/bin:/bin only — npm won't be found.
+// Build an extended PATH that covers Homebrew, nvm, volta, and standard locations.
+function resolveNpmPath(): string {
+  const candidates = [
+    '/opt/homebrew/bin/npm',
+    '/usr/local/bin/npm',
+    '/usr/bin/npm',
+  ];
+  for (const p of candidates) {
+    if (existsSync(p)) return p;
+  }
+  // Try nvm: ~/.nvm/versions/node/<current>/bin/npm
+  try {
+    const nvmDir = `${process.env.HOME}/.nvm/versions/node`;
+    if (existsSync(nvmDir)) {
+      const out = execSync(`ls -t "${nvmDir}"`, { encoding: 'utf8' }).trim().split('\n')[0];
+      const nvmNpm = `${nvmDir}/${out}/bin/npm`;
+      if (out && existsSync(nvmNpm)) return nvmNpm;
+    }
+  } catch { /* ignore */ }
+  return 'npm'; // last resort — may still work if PATH is set at OS level
+}
+
+const NPM_BIN = resolveNpmPath();
+
+// Extend PATH for child processes so npm can find node and its own deps
+const EXEC_ENV = {
+  ...process.env,
+  PATH: [
+    '/opt/homebrew/bin',
+    '/usr/local/bin',
+    '/usr/bin',
+    '/bin',
+    process.env.PATH ?? '',
+  ].join(':'),
+};
 
 // Strict validation: npm package names per the npm naming rules
 // Scoped: @scope/name, unscoped: name. Only alphanumeric, hyphens, dots, underscores allowed.
@@ -68,9 +106,10 @@ export function registerNpmHandlers(ipcMain: IpcMain): void {
 
         sendProgress('installing', 0.5, `Installing ${pkgSpec}...`);
 
-        await execAsync(`npm install ${pkgSpec} --save --prefix "${dataDir}"`, {
+        await execAsync(`"${NPM_BIN}" install ${pkgSpec} --save --prefix "${dataDir}"`, {
           cwd: dataDir,
           timeout: 120000,
+          env: EXEC_ENV,
         });
 
         sendProgress('complete', 1, `Installed ${pkgSpec}`);
@@ -108,9 +147,10 @@ export function registerNpmHandlers(ipcMain: IpcMain): void {
       const dataDir = getDataDir();
 
       try {
-        await execAsync(`npm uninstall ${payload.name} --prefix "${dataDir}"`, {
+        await execAsync(`"${NPM_BIN}" uninstall ${payload.name} --prefix "${dataDir}"`, {
           cwd: dataDir,
           timeout: 60000,
+          env: EXEC_ENV,
         });
 
         const packages = await loadJson<InstalledPackage[]>(PACKAGES_FILE, []);
